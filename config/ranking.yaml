@@ -1,0 +1,55 @@
+# Importance scoring configuration.
+#
+# final_score = sum(weights[c] * component_c) * noise_penalty
+# Every component is normalised to 0..1 before weighting, so the weights below
+# are directly comparable. Tune these instead of touching src/ranking/scorer.py.
+
+# Source trust tiers. Referenced by `trust:` in config/sources.yaml.
+trust_scores:
+  official: 5
+  github: 5
+  paper: 4
+  major_news: 3
+  community: 1
+  social: 1
+
+# Max trust value, used to normalise the trust component.
+trust_max: 5
+
+weights:
+  trust: 0.30       # source credibility
+  recency: 0.20     # how fresh the item is
+  topic: 0.20       # overlap with config/topics.yaml keywords
+  signal: 0.15      # "something actually changed" keywords
+  novelty: 0.15     # 1 - similarity against what we already published
+
+recency:
+  # Score decays linearly from 1.0 (published now) to 0.0 at half_life_days * 2.
+  half_life_days: 3
+  # Items older than this are dropped before ranking.
+  max_age_days: 14
+
+# Per-source-type extra boost added after weighting (small nudges).
+type_boosts:
+  github_releases: 0.05
+  arxiv: 0.0
+  rss: 0.0
+
+selection:
+  # Total items selected per run (also see pipeline.yaml -> max_selected).
+  max_items: 5
+  # Never pick more than this many from a single source in one run.
+  max_per_source: 2
+  # Try to keep a balance between categories. Values are soft quotas;
+  # remaining slots are filled by score.
+  category_quota:
+    ai: 3
+    blockchain: 2
+  # Items scoring below this are never selected.
+  min_score: 0.25
+  # Two items in the same run that cover the same series - two releases of one
+  # repository, two editions of a weekly changelog - collapse into the
+  # higher-scoring one; the other is listed in review.md. Compared on
+  # non-numeric tokens (containment), so `ollama v0.34.1` vs `ollama v0.34.3-rc1`
+  # collapses (1.00) while `vllm v0.99.0` vs `go-ethereum v1.99.0` does not (0.00).
+  intra_run_series_overlap: 0.60

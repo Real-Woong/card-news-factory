@@ -1,0 +1,80 @@
+[
+  {
+    "source_id": "openai_news",
+    "source_name": "OpenAI News",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "ai",
+    "url": "https://openai.com/index/sample-structured-output-ga/",
+    "title": "Structured outputs are now generally available in the Responses API",
+    "summary": "Structured outputs move from beta to GA with strict JSON schema validation, lower latency and no extra cost.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nStructured outputs are now generally available in the Responses API. Developers can pass a JSON Schema with strict: true and the model is constrained to produce conforming output. During the beta, schema violations were the top source of retries for agent pipelines.\n\nWhat changed:\n- Strict schema mode is GA and covered by the standard availability SLA.\n- Median added latency drops from 340 ms to 120 ms.\n- No additional per-token charge; pricing is unchanged.\n- Nested arrays up to depth 5 are supported (previously 3).\n\nMigration: the beta header is no longer required and will be ignored after November 1. Existing requests keep working.",
+    "published_days_ago": 1,
+    "tags": ["api", "developer"]
+  },
+  {
+    "source_id": "anthropic_news",
+    "source_name": "Anthropic News",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "ai",
+    "url": "https://www.anthropic.com/news/sample-mcp-connector-registry",
+    "title": "A connector registry for the Model Context Protocol",
+    "summary": "MCP gains a public connector registry with signed manifests and capability scopes.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nThe Model Context Protocol now has a public connector registry. Each entry ships a signed manifest that declares the tools it exposes, the scopes it requests and the transport it supports.\n\nWhat changed:\n- Connectors are discoverable by name instead of a hand-copied JSON config.\n- Manifests are signed; clients can refuse unsigned connectors.\n- Capability scopes (read, write, network) are declared up front, so a client can deny network access to a filesystem connector.\n\nFor builders: the registry client is in the reference SDKs behind a feature flag. Self-hosting a private registry is supported for internal tools.",
+    "published_days_ago": 2,
+    "tags": ["mcp", "agents", "protocol"]
+  },
+  {
+    "source_id": "gh_vllm",
+    "source_name": "vLLM Releases",
+    "source_type": "github_releases",
+    "trust": "github",
+    "category": "ai",
+    "url": "https://github.com/vllm-project/vllm/releases/tag/v0.99.0-sample",
+    "title": "vllm-project/vllm v0.99.0-sample",
+    "summary": "Release adds hybrid KV cache offload and a breaking change to the sampling parameter API.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nRepository: vllm-project/vllm\nTag: v0.99.0-sample\n\nHighlights:\n- Hybrid KV cache offload to host RAM, raising the usable context on a single 24 GB GPU from 32k to 128k tokens for a 7B model.\n- Prefix caching is enabled by default; disable with --no-enable-prefix-caching.\n- Breaking change: SamplingParams.max_tokens replaces SamplingParams.max_new_tokens. The old name raises a DeprecationWarning and will be removed in 1.0.\n- Measured throughput on A100 80GB with Llama-3-8B: 3,180 output tok/s at batch 64, up from 2,410.\n\nUpgrade notes: pip install -U vllm. Configuration files using max_new_tokens need to be updated.",
+    "published_days_ago": 1,
+    "tags": ["release", "stable", "inference"]
+  },
+  {
+    "source_id": "deepmind_blog",
+    "source_name": "Google DeepMind Blog",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "ai",
+    "url": "https://deepmind.google/blog/sample-long-horizon-agent-eval/",
+    "title": "A benchmark for long-horizon agent reliability",
+    "summary": "New open benchmark measures whether agents can keep a 200-step task on track without human intervention.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nWe are releasing an open benchmark for long-horizon agent reliability. Tasks require 120 to 220 tool calls and are scored on completion, recoverability after an injected failure, and cost.\n\nWhat changed: existing agent benchmarks mostly measure single-shot tool use. This one injects deterministic failures (timeouts, stale data, permission errors) at fixed steps and measures whether the agent notices and recovers.\n\nBaseline results: the strongest configuration completes 41% of tasks unaided; adding an explicit retry policy raises it to 58%. Code and task definitions are Apache 2.0.",
+    "published_days_ago": 3,
+    "tags": ["benchmark", "agents", "eval"]
+  },
+  {
+    "source_id": "huggingface_blog",
+    "source_name": "Hugging Face Blog",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "ai",
+    "url": "https://huggingface.co/blog/sample-structured-output-ga-recap",
+    "title": "Structured outputs reach GA: what it means for open model serving",
+    "summary": "A recap of the structured-output GA announcement and how constrained decoding compares in open serving stacks.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news. This item intentionally overlaps with the OpenAI structured-outputs entry so the deduplication stage has something to catch.\n\nStructured outputs are now generally available in the Responses API, and the same idea is available in open serving stacks through grammar-constrained decoding. We compare strict JSON schema enforcement across three runtimes and look at the latency cost of constrained decoding.",
+    "published_days_ago": 1,
+    "tags": ["api", "open source"]
+  },
+  {
+    "source_id": "arxiv_ai",
+    "source_name": "arXiv cs.AI / cs.LG / cs.CL",
+    "source_type": "arxiv",
+    "trust": "paper",
+    "category": "ai",
+    "url": "http://arxiv.org/abs/2599.00001v1",
+    "title": "Retrieval Compression for Long-Context Agents",
+    "summary": "Abstract: We show that compressing retrieved passages into learned summary tokens preserves 94% of downstream task accuracy while cutting prompt tokens by 6x.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nAbstract:\nWe study retrieval compression for long-context agents. Retrieved passages are encoded into learned summary tokens before being placed in the prompt. Across five agentic benchmarks, the method preserves 94% of task accuracy relative to full-text retrieval while reducing prompt tokens by 6x and end-to-end latency by 2.3x. We release training code and the compression checkpoints.",
+    "published_days_ago": 2,
+    "tags": ["paper", "cs.CL", "rag"]
+  }
+]

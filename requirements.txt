@@ -1,0 +1,13 @@
+# Core runtime (enough for `make run-dry` and the full offline pipeline)
+PyYAML>=6.0.1
+python-dotenv>=1.0.1
+requests>=2.32.0
+feedparser>=6.0.11
+# HTML -> 본문 추출. 없으면 stdlib 폴백으로 동작하지만 boilerplate가 섞입니다.
+beautifulsoup4>=4.12.0
+
+# Dev / test
+pytest>=8.0.0
+
+# --- Optional upgrades (install only if you need them) ---
+# pip install -r requirements-optional.txt

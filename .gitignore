@@ -1,0 +1,69 @@
+# Secrets
+.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Runtime data (keep directory structure via .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/vectorstore/*
+!data/vectorstore/.gitkeep
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Generated outputs
+outputs/drafts/*
+!outputs/drafts/.gitkeep
+outputs/archive/*
+!outputs/archive/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# macOS
+.DS_Store
+
+# R_A_Glance 채널: 렌더 디버그 HTML 은 커밋하지 않음 (샘플 산출물은 커밋)
+For_Review/**/.html/
+
+# 호스팅용 JPEG 스테이징 (별도 정적 호스팅 repo 로 올리는 배포 산출물)
+channel/media_site/
+
+# --- Added for the public repository ---
+# Generated candidates, approvals and publishing records are operational data, not source.
+For_Review/
+logs/*
+!logs/.gitkeep
+outputs/drafts/*
+!outputs/drafts/.gitkeep
+outputs/archive/*
+!outputs/archive/.gitkeep
+outputs/weekly/
+channel/media_site/
+.DS_Store
+*.bak
+.env.*
+!.env.example
+_export/
+out/
+.claude/
+.codex/
+.kiro/

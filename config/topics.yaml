@@ -1,0 +1,108 @@
+# Topic definitions. Used for (a) tagging collected articles and
+# (b) boosting the ranking score of on-topic items.
+#
+# weight   : multiplier applied to the topic component of the score
+# keywords : matched case-insensitively against title + summary + content
+
+categories:
+  ai:
+    label: AI
+    topics:
+      - id: foundation_models
+        label: Foundation models
+        weight: 1.0
+        keywords: [gpt, claude, gemini, llama, mistral, qwen, deepseek, foundation model, frontier model]
+      - id: agents
+        label: AI agents / tool use
+        weight: 1.0
+        keywords: [agent, agentic, tool use, function calling, mcp, model context protocol, computer use]
+      - id: inference_infra
+        label: Inference & serving
+        weight: 0.9
+        keywords: [inference, vllm, quantization, kv cache, throughput, latency, tensorrt, ollama, serving]
+      - id: rag_memory
+        label: RAG & memory
+        weight: 0.9
+        keywords: [rag, retrieval augmented, embedding, vector database, reranker, long context]
+      - id: open_models
+        label: Open weights
+        keywords: [open weights, open source model, apache 2.0, weights released, open model]
+        weight: 1.0
+      - id: evals_safety
+        label: Evaluation & safety
+        weight: 0.7
+        keywords: [benchmark, eval, evaluation, red team, alignment, safety, jailbreak, hallucination]
+      - id: devtools
+        label: AI developer tooling
+        weight: 0.8
+        keywords: [sdk, api, cli, ide, copilot, code assistant, developer preview, pricing]
+
+  blockchain:
+    label: Blockchain
+    topics:
+      - id: protocol_upgrades
+        label: Protocol upgrades
+        weight: 1.0
+        keywords: [hard fork, upgrade, eip, pectra, fusaka, mainnet, testnet, devnet, consensus]
+      - id: scaling_l2
+        label: Scaling & L2
+        weight: 1.0
+        keywords: [rollup, layer 2, l2, optimistic, zk rollup, blob, data availability, sequencer, based rollup]
+      - id: zk_crypto
+        label: Zero knowledge & cryptography
+        weight: 0.9
+        keywords: [zero knowledge, zk, snark, stark, proof system, verifiable, mpc, fhe]
+      - id: infra_clients
+        label: Clients & node infra
+        weight: 0.9
+        keywords: [client release, validator, node, rpc, execution client, consensus client, indexer]
+      - id: smart_contracts
+        label: Smart contracts & tooling
+        weight: 0.8
+        keywords: [solidity, move, anchor, foundry, hardhat, audit, account abstraction, erc-, erc4337]
+      - id: institutional
+        label: Institutional & regulation
+        weight: 0.6
+        keywords: [etf, custody, regulation, sec, mica, stablecoin, tokenization, compliance]
+
+# Terms that usually mean "something concretely changed" -> signal boost.
+signal_keywords:
+  weight: 1.0
+  terms:
+    - released
+    - release
+    - launch
+    - launches
+    - announcing
+    - announced
+    - now available
+    - generally available
+    - general availability
+    - open source
+    - open-sourced
+    - deprecated
+    - breaking change
+    - migration
+    - price
+    - pricing
+    - benchmark
+    - mainnet
+    - v1.
+    - v2.
+    - rc1
+
+# Terms that usually mean low-value noise -> score penalty.
+noise_keywords:
+  penalty: 0.35
+  terms:
+    - webinar
+    - sponsored
+    - giveaway
+    - airdrop farming
+    - price prediction
+    - to the moon
+    - job opening
+    - we're hiring
+    - hiring
+    - podcast episode
+    - newsletter roundup

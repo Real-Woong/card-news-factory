@@ -1,0 +1,117 @@
+<!doctype html>
+<!--
+  R_A_Glance 슬라이드 한 장. renderer 가 {{...}} 를 치환합니다.
+
+  구조는 세 가지 slide type 이 공유합니다:
+    slide__top    상단 메타 (카테고리/출처, 섹션/슬라이드 번호)
+    slide__main   중앙 (headline+subtitle | title+body | takeaway+sources)
+    slide__bottom 하단 (워드마크)
+
+  autofit 스크립트가 --fit 배율을 조정해 overflow 를 해소하고, 결과를
+  <html data-fit="..."> 에 기록합니다. 자동 truncate 는 하지 않습니다.
+-->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{TITLE}}</title>
+    <style>
+      :root {
+        --canvas-w: {{CANVAS_W}}px;
+        --canvas-h: {{CANVAS_H}}px;
+        --bg: {{BG}};
+        --fg: {{FG}};
+        --muted: {{MUTED}};
+        --hairline: {{HAIRLINE}};
+        --accent: {{ACCENT}};
+        --progress: {{PROGRESS}}%;
+        --margin-x: {{MARGIN_X}}px;
+        --margin-y: {{MARGIN_Y}}px;
+        --main-top: {{MAIN_TOP}}px;
+        --cover-bottom: {{COVER_BOTTOM}}px;
+        --gap: {{GAP}}px;
+        --body-gap: {{BODY_GAP}}px;
+        --title-body-gap: {{TITLE_BODY_GAP}}px;
+        --font-stack: {{FONT_STACK}};
+        --mono-stack: {{MONO_STACK}};
+        --headline-size: {{HEADLINE_SIZE}}px;
+        --headline-weight: {{HEADLINE_WEIGHT}};
+        --headline-lh: {{HEADLINE_LH}};
+        --headline-ls: {{HEADLINE_LS}};
+        --subtitle-size: {{SUBTITLE_SIZE}}px;
+        --subtitle-weight: {{SUBTITLE_WEIGHT}};
+        --subtitle-lh: {{SUBTITLE_LH}};
+        --subtitle-ls: {{SUBTITLE_LS}};
+        --title-size: {{TITLE_SIZE}}px;
+        --title-weight: {{TITLE_WEIGHT}};
+        --title-lh: {{TITLE_LH}};
+        --title-ls: {{TITLE_LS}};
+        --body-size: {{BODY_SIZE}}px;
+        --body-weight: {{BODY_WEIGHT}};
+        --body-lh: {{BODY_LH}};
+        --body-ls: {{BODY_LS}};
+        --meta-size: {{META_SIZE}}px;
+        --meta-weight: {{META_WEIGHT}};
+        --meta-lh: {{META_LH}};
+        --meta-ls: {{META_LS}};
+        --fit: 1;
+      }
+{{BASE_CSS}}
+{{TYPOGRAPHY_CSS}}
+{{LAYOUT_CSS}}
+    </style>
+  </head>
+  <body>
+    <section class="slide slide--{{SLIDE_TYPE}} {{STYLE_CLASSES}}" data-index="{{INDEX}}">
+      <div class="slide__progress" aria-hidden="true"></div>
+      {{GHOST}}
+      <header class="slide__top t-meta">
+        <span class="slide__eyebrow">{{TOP_LEFT}}</span>
+        <span class="slide-number">{{TOP_RIGHT}}</span>
+      </header>
+
+      <main class="slide__main" id="fit-target">{{MAIN}}</main>
+
+      {{SOURCES_BLOCK}}
+
+      <footer class="slide__bottom t-meta hairline">
+        {{LOGO}}
+        <span class="slide__tagline">{{BOTTOM_RIGHT}}</span>
+      </footer>
+    </section>
+
+    <script>
+      // overflow 해소: 허용된 배율을 순서대로 적용. 마지막 배율에서도 넘치면
+      // data-fit="overflow" 로 기록하고 renderer 가 실패 처리합니다.
+      //
+      // 측정은 viewport 와 무관한 CSS 박스 기준으로만 합니다. window.innerHeight 를
+      // 쓰면 --dump-dom 실행 시 기본 viewport(800x600)와 비교되어 항상 overflow 로
+      // 잡힙니다(실측).
+      (function () {
+        var scales = {{AUTOFIT_SCALES}};
+        var target = document.getElementById('fit-target');
+        var slide = document.querySelector('.slide');
+        var root = document.documentElement;
+        function overflowing() {
+          if (target.scrollHeight > target.clientHeight + 1) return true;
+          return slide.scrollHeight > slide.clientHeight + 1;
+        }
+        var applied = scales[0];
+        for (var i = 0; i < scales.length; i++) {
+          applied = scales[i];
+          root.style.setProperty('--fit', String(applied));
+          void target.offsetHeight;
+          if (!overflowing()) break;
+        }
+        root.dataset.fit = overflowing() ? 'overflow' : 'ok';
+        root.dataset.fitScale = String(applied);
+        // 균일성 검증용 실측 y: 본문 첫 요소(제목/헤드라인)와 푸터의 top.
+        function top(el) { return el ? Math.round(el.getBoundingClientRect().top) : -1; }
+        root.dataset.fitMetrics =
+          target.scrollHeight + '/' + target.clientHeight +
+          ' slide ' + slide.scrollHeight + '/' + slide.clientHeight +
+          ' geom ' + top(target.firstElementChild) + ',' +
+          top(document.querySelector('.slide__bottom'));
+      })();
+    </script>
+  </body>
+</html>

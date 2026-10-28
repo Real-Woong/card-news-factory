@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- 사람이 브라우저에서 캐러셀 전체를 한 번에 확인하는 용도. 게시물이 아닙니다. -->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>MilleMiglia: middle-mile 물류를 위한 오픈소스 인스턴스 생성기 — R_A_Glance preview</title>
+    <style>
+      :root {
+        --bg: #0D0D0D;
+        --fg: #F5F5F5;
+        --muted: rgba(245, 245, 245, 0.62);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 48px 40px 72px;
+        background: #141414;
+        color: var(--fg);
+        font-family: "Apple SD Gothic Neo", "Helvetica Neue", Inter, system-ui, sans-serif;
+      }
+      header { max-width: 1400px; margin: 0 auto 32px; }
+      h1 { font-size: 28px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
+      .meta { font-size: 15px; color: var(--muted); line-height: 1.7; }
+      .meta code { font-size: 14px; }
+      .strip {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 28px;
+      }
+      figure { margin: 0; }
+      figure img {
+        width: 100%;
+        display: block;
+        background: var(--bg);
+        border: 1px solid rgba(245, 245, 245, 0.14);
+      }
+      figcaption {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .caption-block {
+        max-width: 1400px;
+        margin: 56px auto 0;
+        border-top: 1px solid rgba(245, 245, 245, 0.14);
+        padding-top: 28px;
+      }
+      .caption-block h2 { font-size: 18px; margin: 0 0 14px; }
+      pre {
+        white-space: pre-wrap;
+        font-family: inherit;
+        font-size: 16px;
+        line-height: 1.75;
+        margin: 0;
+        color: #E8E8E8;
+      }
+      .tags { margin-top: 18px; font-size: 15px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>MilleMiglia: middle-mile 물류를 위한 오픈소스 인스턴스 생성기</h1>
+      <div class="meta">
+        template <code>news_standard</code> · 5 slides ·
+        topic <code>AI</code> · 1080×1350<br />
+        생성 2026-09-21T05:25:31.434673+00:00 · 검수 전 초안 (게시 금지)
+      </div>
+      <!-- Phase 2: approval.json 의 상태가 여기에 기록됩니다 (CLI 가 갱신) -->
+      <div id="approval-status" class="meta">Approval: <b>APPROVED</b> &nbsp;·&nbsp; publishable: true &nbsp;·&nbsp; quality score: 0.87 &nbsp;·&nbsp; warnings: 2</div>
+    </header>
+
+    <div class="strip"><figure><img src="slides/01.png" alt="slide 1" /><figcaption><span>01 · COVER</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/02.png" alt="slide 2" /><figcaption><span>02 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/03.png" alt="slide 3" /><figcaption><span>03 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/04.png" alt="slide 4" /><figcaption><span>04 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/05.png" alt="slide 5" /><figcaption><span>05 · CLOSING</span><span>fit ok ×1</span></figcaption></figure></div>
+
+    <section class="caption-block">
+      <h2>caption.md</h2>
+      <pre>middle-mile 물류 최적화에 공개 벤치마크가 없던 이유는 데이터가 기업 기밀이기 때문이다.
+
+Google Research가 middle-mile 물류 네트워크용 오픈소스 인스턴스 생성기 MilleMiglia를 공개했다.
+C++로 작성된 이 생성기는 논문 &#x27;A Novel Instance Generator for Simulating Middle-Mile Logistics Networks&#x27;와 함께 소스 코드·문서가 공개 배포됐다.
+배송물이 대륙 네트워크를 여러 차량에 걸쳐 이동하고, distribution center 도착 시간창을 놓치면 다음 사이클까지 대기하는 동기화 제약은 하루·한 차량 단위로 푸는 기존 VRP 정식화와 구분된다.
+네트워크 토폴로지와 수요량이 기밀로 다뤄져 고품질 공개 데이터가 없던 구간에서, 프라이버시 보존 방식으로 표준 벤치마크를 확보한 점이 핵심이다.
+이제 민감한 기업 데이터 없이도 middle-mile 최적화 알고리즘을 테스트하고 비교할 수 있다.
+
+공통 벤치마크로 middle-mile 최적화를 재현·비교할 기반이 마련됐다.
+
+Sources: Google Research Blog</pre>
+      <div class="tags">#AI #GoogleResearch #Logistics #VRP #Optimization</div>
+    </section>
+  </body>
+</html>

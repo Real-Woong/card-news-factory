@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- 사람이 브라우저에서 캐러셀 전체를 한 번에 확인하는 용도. 게시물이 아닙니다. -->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{HEADLINE}} — R_A_Glance preview</title>
+    <style>
+      :root {
+        --bg: {{BG}};
+        --fg: {{FG}};
+        --muted: {{MUTED}};
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 48px 40px 72px;
+        background: #141414;
+        color: var(--fg);
+        font-family: {{FONT_STACK}};
+      }
+      header { max-width: 1400px; margin: 0 auto 32px; }
+      h1 { font-size: 28px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
+      .meta { font-size: 15px; color: var(--muted); line-height: 1.7; }
+      .meta code { font-size: 14px; }
+      .strip {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 28px;
+      }
+      figure { margin: 0; }
+      figure img {
+        width: 100%;
+        display: block;
+        background: var(--bg);
+        border: 1px solid rgba(245, 245, 245, 0.14);
+      }
+      figcaption {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .caption-block {
+        max-width: 1400px;
+        margin: 56px auto 0;
+        border-top: 1px solid rgba(245, 245, 245, 0.14);
+        padding-top: 28px;
+      }
+      .caption-block h2 { font-size: 18px; margin: 0 0 14px; }
+      pre {
+        white-space: pre-wrap;
+        font-family: inherit;
+        font-size: 16px;
+        line-height: 1.75;
+        margin: 0;
+        color: #E8E8E8;
+      }
+      .tags { margin-top: 18px; font-size: 15px; color: var(--muted); }
+      .hooks { max-width: 1400px; margin: 40px auto 0; line-height: 1.7; }
+      .hooks h2 { font-size: 18px; margin: 0 0 10px; }
+      .hooks ol { padding-left: 22px; margin: 8px 0 0; }
+      .hooks li { margin-bottom: 12px; }
+      .hooks code { font-size: 13px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>{{HEADLINE}}</h1>
+      <div class="meta">
+        template <code>{{TEMPLATE}}</code> · {{SLIDE_COUNT}} slides ·
+        topic <code>{{TOPIC}}</code> · {{CANVAS}}<br />
+        생성 {{GENERATED_AT}} · 검수 전 초안 (게시 금지)
+      </div>
+      <!-- Phase 2: approval.json 의 상태가 여기에 기록됩니다 (CLI 가 갱신) -->
+      <div id="approval-status" class="meta">Approval: <b>PENDING</b></div>
+    </header>
+
+    <div class="strip">{{FIGURES}}</div>
+
+    {{HOOKS}}
+
+    <section class="caption-block">
+      <h2>caption.md</h2>
+      <pre>{{CAPTION}}</pre>
+      <div class="tags">{{HASHTAGS}}</div>
+    </section>
+  </body>
+</html>

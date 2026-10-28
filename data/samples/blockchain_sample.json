@@ -1,0 +1,80 @@
+[
+  {
+    "source_id": "ethereum_blog",
+    "source_name": "Ethereum Foundation Blog",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "blockchain",
+    "url": "https://blog.ethereum.org/2026/09/15/sample-devnet-blob-throughput",
+    "title": "Devnet-9 raises blob throughput and changes the fee market",
+    "summary": "Devnet-9 doubles the target blob count per block and introduces a separate blob base fee curve.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nDevnet-9 is live. The target blob count per block moves from 6 to 12 with a maximum of 18, and the blob base fee now uses its own update fraction so L2 data costs decouple from execution gas.\n\nWhat changed:\n- Target blobs per block: 6 -> 12 (max 9 -> 18).\n- Blob base fee update fraction tuned so a sustained 2x demand spike settles in roughly 12 blocks instead of 30.\n- Client teams must update to the devnet-9 releases; older clients will fork off.\n\nFor rollup operators: expect lower and less spiky data costs, but re-tune your blob submission strategy - posting one blob per batch is no longer the cheapest option in most cases.",
+    "published_days_ago": 2,
+    "tags": ["upgrade", "l2", "blob"]
+  },
+  {
+    "source_id": "gh_sui",
+    "source_name": "Sui Releases",
+    "source_type": "github_releases",
+    "trust": "github",
+    "category": "blockchain",
+    "url": "https://github.com/MystenLabs/sui/releases/tag/mainnet-v9.99.0-sample",
+    "title": "MystenLabs/sui mainnet-v9.99.0-sample",
+    "summary": "Validator release with a new consensus commit path and a breaking RPC removal.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nRepository: MystenLabs/sui\nTag: mainnet-v9.99.0-sample\n\nHighlights:\n- New consensus commit path reduces observed p50 finality from 480 ms to 390 ms on the public testnet.\n- Breaking: the deprecated sui_getRawObject JSON-RPC method is removed. Use sui_getObject with options.showBcs.\n- Move package upgrade policy now records the upgrade cap owner in the package metadata.\n- Node operators: state sync requires 1.5x the previous disk write bandwidth during catch-up.\n\nUpgrade window: validators should upgrade within 72 hours.",
+    "published_days_ago": 1,
+    "tags": ["release", "stable", "validator"]
+  },
+  {
+    "source_id": "solana_news",
+    "source_name": "Solana News",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "blockchain",
+    "url": "https://solana.com/news/sample-fee-market-update",
+    "title": "Local fee markets get per-account congestion pricing",
+    "summary": "Priority fees become account-scoped, so congestion on one program stops repricing the whole block.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nLocal fee markets now price congestion per writable account rather than per block. A hot NFT mint no longer raises the priority fee required for unrelated transfers.\n\nWhat changed:\n- Priority fee estimation is account-scoped; RPC getRecentPrioritizationFees returns per-account percentiles.\n- Wallets that used a single global fee estimate will overpay; update to the account-aware estimate.\n- Measured on testnet: median priority fee for unrelated transfers during a mint event fell 71%.",
+    "published_days_ago": 4,
+    "tags": ["fees", "infra"]
+  },
+  {
+    "source_id": "gh_go_ethereum",
+    "source_name": "go-ethereum Releases",
+    "source_type": "github_releases",
+    "trust": "github",
+    "category": "blockchain",
+    "url": "https://github.com/ethereum/go-ethereum/releases/tag/v1.99.0-sample",
+    "title": "ethereum/go-ethereum v1.99.0-sample",
+    "summary": "Execution client release required for devnet-9, plus a state snapshot format change.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nRepository: ethereum/go-ethereum\nTag: v1.99.0-sample\n\nHighlights:\n- Required for devnet-9 participation; implements the new blob fee market parameters.\n- Snapshot format v3: first start after upgrade rebuilds the snapshot, taking roughly 40 minutes on NVMe.\n- --cache.blobs flag added to bound blob cache memory.\n- Deprecated: --syncmode light is removed.",
+    "published_days_ago": 2,
+    "tags": ["release", "stable", "client"]
+  },
+  {
+    "source_id": "arxiv_blockchain",
+    "source_name": "arXiv blockchain / cryptography",
+    "source_type": "arxiv",
+    "trust": "paper",
+    "category": "blockchain",
+    "url": "http://arxiv.org/abs/2599.00002v1",
+    "title": "Batched Recursive Proofs for Rollup Settlement",
+    "summary": "Abstract: A batching scheme for recursive SNARKs that cuts settlement proof cost per transaction by 3.4x at a fixed verifier gas budget.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nAbstract:\nWe present a batching scheme for recursive SNARK settlement proofs. By deferring the final aggregation step and sharing the verifier circuit across batches, per-transaction proving cost drops 3.4x at a fixed on-chain verification gas budget. We provide a security argument in the algebraic group model and an open-source prototype.",
+    "published_days_ago": 3,
+    "tags": ["paper", "zk", "rollup"]
+  },
+  {
+    "source_id": "coinbase_blog",
+    "source_name": "Coinbase Blog",
+    "source_type": "rss",
+    "trust": "official",
+    "category": "blockchain",
+    "url": "https://www.coinbase.com/blog/sample-onchain-payments-sdk",
+    "title": "An onchain payments SDK with sponsored gas",
+    "summary": "New SDK bundles account abstraction paymasters so apps can sponsor user transaction fees.",
+    "content": "SAMPLE FIXTURE - synthetic data for local dry-runs, not real news.\n\nA new payments SDK wraps ERC-4337 paymasters so applications can sponsor user gas without running their own bundler.\n\nWhat changed:\n- Sponsored transactions are a two-line SDK call instead of a custom paymaster deployment.\n- Per-app spend caps and per-user rate limits are enforced server side.\n- Supported on two L2s at launch; more to follow. Fees are quoted in the app's settlement currency.",
+    "published_days_ago": 5,
+    "tags": ["payments", "account abstraction"]
+  }
+]

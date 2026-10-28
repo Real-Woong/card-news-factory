@@ -1,0 +1,14 @@
+{
+  "status": "approved",
+  "decision": "approved",
+  "reviewed_at": "2026-09-21T05:25:31.522715+00:00",
+  "reviewer": "jin",
+  "modified": false,
+  "notes": "재검수 완료",
+  "publishable": true,
+  "content_quality_score": 0.8682,
+  "warnings": [
+    "출처가 1개입니다 — 교차 확인 권장",
+    "같은 사실 반복 (유사도 0.63): slide 4 \"민감 기업 데이터 없이 middle-mile 최적화 알고리즘 테스트·비…\" ↔ slide 5 \"middle-mile 최적화를 공통 벤치마크로 재현·비교하는 기반 마련\""
+  ]
+}

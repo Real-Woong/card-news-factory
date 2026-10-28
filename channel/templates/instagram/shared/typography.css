@@ -1,0 +1,59 @@
+/* R_A_Glance — 타이포그래피
+ *
+ * 크기/두께/자간은 brand.yaml -> typography 에서 주입됩니다.
+ * 폰트 파일은 저장소에 두지 않고 시스템 폰트를 이름으로 참조합니다.
+ */
+
+body {
+  font-family: var(--font-stack);
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-lh);
+  /* 한국어는 단어 중간에서 줄바꿈하면 가독성이 크게 떨어집니다("모 / 델").
+     keep-all 로 어절 단위 줄바꿈을 강제하고, 긴 영문 토큰(URL·버전)만 예외로 끊습니다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.t-headline {
+  font-size: calc(var(--headline-size) * var(--fit, 1));
+  font-weight: var(--headline-weight);
+  line-height: var(--headline-lh);
+  letter-spacing: var(--headline-ls);
+  text-wrap: balance;
+}
+
+.t-subtitle {
+  font-size: calc(var(--subtitle-size) * var(--fit, 1));
+  font-weight: var(--subtitle-weight);
+  line-height: var(--subtitle-lh);
+  letter-spacing: var(--subtitle-ls);
+  color: var(--muted);
+}
+
+.t-title {
+  font-size: calc(var(--title-size) * var(--fit, 1));
+  font-weight: var(--title-weight);
+  line-height: var(--title-lh);
+  letter-spacing: var(--title-ls);
+  text-wrap: balance;
+}
+
+.t-body {
+  font-size: calc(var(--body-size) * var(--fit, 1));
+  font-weight: var(--body-weight);
+  line-height: var(--body-lh);
+}
+
+.t-meta {
+  font-size: var(--meta-size);
+  font-weight: var(--meta-weight);
+  line-height: var(--meta-lh);
+  letter-spacing: var(--meta-ls);
+}
+
+/* 기술 용어는 본문 안에서도 라틴 문자 가독성을 유지 */
+.mono {
+  font-family: var(--mono-stack);
+  font-size: 0.92em;
+}

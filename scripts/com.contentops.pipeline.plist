@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd job (engine): every Monday at 08:30 local time collect, verify and pick this week's
+  two topics (scripts/run_pipeline.sh). Cards are made and posted by the separate channel job
+  (scripts/com.contentops.channel.plist) on Wednesday and Sunday.
+
+  {{PROJECT_DIR}} is replaced by scripts/install_launchd.sh.
+  Weekday values: 1 = Monday ... 5 = Friday (0 and 7 both mean Sunday).
+
+  If the Mac is asleep at the scheduled time, launchd runs the job as soon as it
+  wakes. Use `launchctl kickstart -k gui/$(id -u)/com.contentops.pipeline` to
+  trigger a run manually.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.contentops.pipeline</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <!-- Explicit interpreter: macOS privacy (TCC) grants Full Disk Access per program, and this
+             project lives under ~/Desktop. Grant /bin/bash in System Settings -> Privacy & Security
+             -> Full Disk Access, otherwise launchd gets "Operation not permitted" (exit 126). -->
+        <string>/bin/bash</string>
+        <string>{{PROJECT_DIR}}/scripts/run_pipeline.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>{{PROJECT_DIR}}</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>LANG</key>
+        <string>en_US.UTF-8</string>
+    </dict>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Weekday</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>8</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+        </dict>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>{{PROJECT_DIR}}/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{PROJECT_DIR}}/logs/launchd.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+</dict>
+</plist>

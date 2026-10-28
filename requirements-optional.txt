@@ -1,0 +1,14 @@
+# Optional upgrades. The pipeline degrades gracefully when these are missing.
+#
+# chromadb              -> replaces the built-in JSON vector store
+# sentence-transformers -> local embeddings instead of the hashing fallback
+# openai / anthropic    -> hosted LLM providers (mock / kiro_cli 는 불필요)
+#
+# beautifulsoup4 는 필수 의존성으로 승격되어 requirements.txt 에 있습니다.
+#
+# NOTE: chromadb / sentence-transformers may not have wheels for very new
+# Python versions (e.g. 3.14). Use Python 3.11 / 3.12 if you need them.
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+openai>=1.40.0
+anthropic>=0.34.0

@@ -1,0 +1,342 @@
+<!doctype html>
+<!--
+  R_A_Glance 슬라이드 한 장. renderer 가 {{...}} 를 치환합니다.
+
+  구조는 세 가지 slide type 이 공유합니다:
+    slide__top    상단 메타 (카테고리/출처, 섹션/슬라이드 번호)
+    slide__main   중앙 (headline+subtitle | title+body | takeaway+sources)
+    slide__bottom 하단 (워드마크)
+
+  autofit 스크립트가 --fit 배율을 조정해 overflow 를 해소하고, 결과를
+  <html data-fit="..."> 에 기록합니다. 자동 truncate 는 하지 않습니다.
+-->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>R_A_Glance 05</title>
+    <style>
+      :root {
+        --canvas-w: 1080px;
+        --canvas-h: 1350px;
+        --bg: #0D0D0D;
+        --fg: #F5F5F5;
+        --muted: rgba(245, 245, 245, 0.62);
+        --hairline: rgba(245, 245, 245, 0.16);
+        --margin-x: 88px;
+        --margin-y: 88px;
+        --gap: 28px;
+        --body-gap: 20px;
+        --title-body-gap: 40px;
+        --font-stack: "Apple SD Gothic Neo", "Helvetica Neue", Inter, system-ui, sans-serif;
+        --mono-stack: "SF Mono", Menlo, monospace;
+        --headline-size: 82px;
+        --headline-weight: 700;
+        --headline-lh: 1.16;
+        --headline-ls: -0.02em;
+        --subtitle-size: 38px;
+        --subtitle-weight: 400;
+        --subtitle-lh: 1.45;
+        --subtitle-ls: -0.01em;
+        --title-size: 52px;
+        --title-weight: 700;
+        --title-lh: 1.25;
+        --title-ls: -0.015em;
+        --body-size: 34px;
+        --body-weight: 400;
+        --body-lh: 1.5;
+        --body-ls: 0;
+        --meta-size: 24px;
+        --meta-weight: 500;
+        --meta-lh: 1.4;
+        --meta-ls: 0.08em;
+        --fit: 1;
+      }
+/* R_A_Glance — 공통 레이아웃
+ *
+ * 색상/사이즈는 renderer 가 brand.yaml 값을 CSS 변수로 주입합니다.
+ * 이 파일에 색상 리터럴이나 픽셀 상수를 직접 쓰지 않습니다(--var 사용).
+ *
+ * 금지: gradient, glow, shadow, border-radius 장식, accent color, 이미지.
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.slide {
+  position: relative;
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  padding: var(--margin-y) var(--margin-x);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* 상단 / 중앙 / 하단 3분할. 중앙이 남는 공간을 차지합니다. */
+.slide__top {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.slide__main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--title-body-gap);
+  /* autofit 측정 기준 컨테이너 */
+  overflow: hidden;
+  min-height: 0;
+}
+
+.slide__bottom {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding-top: var(--gap);
+}
+
+/* 얇은 구분선. 장식이 아니라 계층 표시용. */
+.hairline {
+  border-top: 1px solid var(--hairline);
+  padding-top: calc(var(--gap) * 0.7);
+}
+
+.wordmark {
+  letter-spacing: 0.14em;
+  text-transform: none;
+  color: var(--fg);
+}
+
+.slide-number {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 본문 리스트: bullet 은 짧은 dash 하나만 사용 */
+.body-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--body-gap);
+}
+
+.body-list li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: start;
+}
+
+.body-list li::before {
+  content: "—";
+  color: var(--muted);
+}
+
+/* 출처 블록. closing slide 에서 main 과 footer 사이에 고정되어,
+ * takeaway 가 짧아도 SOURCES 아래에 빈 띠가 남지 않습니다. */
+.slide__sources {
+  flex: 0 0 auto;
+  padding-bottom: calc(var(--gap) * 0.8);
+}
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* closing variant A 의 두 번째 블록. 라벨은 meta 스타일로 낮추고 본문은 동일 크기. */
+.closing-extra {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+
+.closing-extra__label {
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.sources__label {
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.sources__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 18px;
+}
+
+.sources__list span:not(:last-child)::after {
+  content: " ·";
+  color: var(--muted);
+}
+
+/* R_A_Glance — 타이포그래피
+ *
+ * 크기/두께/자간은 brand.yaml -> typography 에서 주입됩니다.
+ * 폰트 파일은 저장소에 두지 않고 시스템 폰트를 이름으로 참조합니다.
+ */
+
+body {
+  font-family: var(--font-stack);
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-lh);
+  /* 한국어는 단어 중간에서 줄바꿈하면 가독성이 크게 떨어집니다("모 / 델").
+     keep-all 로 어절 단위 줄바꿈을 강제하고, 긴 영문 토큰(URL·버전)만 예외로 끊습니다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.t-headline {
+  font-size: calc(var(--headline-size) * var(--fit, 1));
+  font-weight: var(--headline-weight);
+  line-height: var(--headline-lh);
+  letter-spacing: var(--headline-ls);
+  text-wrap: balance;
+}
+
+.t-subtitle {
+  font-size: calc(var(--subtitle-size) * var(--fit, 1));
+  font-weight: var(--subtitle-weight);
+  line-height: var(--subtitle-lh);
+  letter-spacing: var(--subtitle-ls);
+  color: var(--muted);
+}
+
+.t-title {
+  font-size: calc(var(--title-size) * var(--fit, 1));
+  font-weight: var(--title-weight);
+  line-height: var(--title-lh);
+  letter-spacing: var(--title-ls);
+  text-wrap: balance;
+}
+
+.t-body {
+  font-size: calc(var(--body-size) * var(--fit, 1));
+  font-weight: var(--body-weight);
+  line-height: var(--body-lh);
+}
+
+.t-meta {
+  font-size: var(--meta-size);
+  font-weight: var(--meta-weight);
+  line-height: var(--meta-lh);
+  letter-spacing: var(--meta-ls);
+}
+
+/* 기술 용어는 본문 안에서도 라틴 문자 가독성을 유지 */
+.mono {
+  font-family: var(--mono-stack);
+  font-size: 0.92em;
+}
+
+/* deep_dive (7 slides) — 정보량이 많으므로 제목을 조금 줄이고
+ * 본문 줄 간격을 유지해 스캔 가능성을 확보합니다.
+ */
+
+.slide--cover .slide__main {
+  justify-content: center;
+  gap: calc(var(--gap) * 1.1);
+}
+
+.slide--content .slide__main {
+  justify-content: center;
+  gap: calc(var(--title-body-gap) * 0.85);
+}
+
+.slide--content .t-title {
+  font-size: calc(var(--title-size) * 0.94 * var(--fit, 1));
+}
+
+/* key detail 슬라이드는 번호를 강조해 흐름을 보여줍니다 */
+.slide--content .slide-number {
+  color: var(--fg);
+}
+
+.slide--closing .slide__main {
+  justify-content: center;
+  gap: calc(var(--title-body-gap) * 0.85);
+}
+
+.slide--closing .sources {
+  margin-top: calc(var(--gap) * 2);
+}
+
+    </style>
+  </head>
+  <body>
+    <section class="slide slide--content" data-index="5">
+      <header class="slide__top t-meta">
+        <span class="slide__eyebrow">KEY DETAIL 2</span>
+        <span class="slide-number">05 / 07</span>
+      </header>
+
+      <main class="slide__main" id="fit-target"><h2 class="t-title">Firedancer와 Agave 변경</h2>
+<ul class="body-list"><li class="t-body"><span>Firedancer가 getSlotLeader, getSlotLeaders, getLeaderSchedule RPC 채택</span></li>
+<li class="t-body"><span>Firedancer는 x86_64 전용 명령을 대체해 ARM Validator 실행 지원</span></li>
+<li class="t-body"><span>Firedancer program cache를 class 기반 메모리 할당으로 전환</span></li>
+<li class="t-body"><span>Agave는 동일 우선순위 트랜잭션을 도착 시간 순으로 정렬</span></li>
+<li class="t-body"><span>Agave는 TPU vote·forwards·Votor에서 사설·로컬 주소 차단</span></li></ul></main>
+
+      
+
+      <footer class="slide__bottom t-meta hairline">
+        <span class="wordmark">R_A_Glance</span>
+        <span class="slide__tagline"></span>
+      </footer>
+    </section>
+
+    <script>
+      // overflow 해소: 허용된 배율을 순서대로 적용. 마지막 배율에서도 넘치면
+      // data-fit="overflow" 로 기록하고 renderer 가 실패 처리합니다.
+      //
+      // 측정은 viewport 와 무관한 CSS 박스 기준으로만 합니다. window.innerHeight 를
+      // 쓰면 --dump-dom 실행 시 기본 viewport(800x600)와 비교되어 항상 overflow 로
+      // 잡힙니다(실측).
+      (function () {
+        var scales = [1.0, 0.94, 0.88, 0.82];
+        var target = document.getElementById('fit-target');
+        var slide = document.querySelector('.slide');
+        var root = document.documentElement;
+        function overflowing() {
+          if (target.scrollHeight > target.clientHeight + 1) return true;
+          return slide.scrollHeight > slide.clientHeight + 1;
+        }
+        var applied = scales[0];
+        for (var i = 0; i < scales.length; i++) {
+          applied = scales[i];
+          root.style.setProperty('--fit', String(applied));
+          void target.offsetHeight;
+          if (!overflowing()) break;
+        }
+        root.dataset.fit = overflowing() ? 'overflow' : 'ok';
+        root.dataset.fitScale = String(applied);
+        root.dataset.fitMetrics =
+          target.scrollHeight + '/' + target.clientHeight +
+          ' slide ' + slide.scrollHeight + '/' + slide.clientHeight;
+      })();
+    </script>
+  </body>
+</html>

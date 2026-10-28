@@ -1,0 +1,180 @@
+# Pipeline behaviour: stage toggles, dedup thresholds, LLM settings, paths.
+# Env vars referenced as ${VAR} or ${VAR:-default} are expanded at load time.
+
+run:
+  # Stages execute in this order. Remove or reorder to change the flow.
+  stages:
+    - collect
+    - normalize
+    - store
+    - deduplicate
+    - update_rag
+    - rank
+    - research
+    - fact_check
+    - generate_drafts
+    - generate_review
+  # Keep going when a single non-critical stage fails (logged + recorded).
+  continue_on_stage_error: false
+  # Collectors never abort the run; a failure is logged and skipped.
+  continue_on_collector_error: true
+
+collect:
+  # Global cap across all sources for one run.
+  max_total_items: 200
+  # Polite delay between HTTP requests to the same host.
+  request_delay_seconds: 1.0
+  http_timeout_seconds: 20
+  max_retries: 2
+  # Fetch the full article body (not just the feed summary).
+  fetch_full_content: true
+  max_content_chars: 20000
+  # Directory of *.json fixtures used by --offline / --dry-run.
+  sample_dir: data/samples
+
+dedup:
+  # Stage 1: exact URL / canonical URL / content hash match against the DB.
+  url_enabled: true
+  # Stage 2: normalised-title similarity (difflib ratio + token Jaccard).
+  title_enabled: true
+  title_threshold: 0.82
+  # Only compare titles against items from the last N days.
+  title_lookback_days: 45
+  # Stage 3: embedding cosine similarity against articles AND past posts.
+  embedding_enabled: true
+  embedding_top_k: 5
+
+  # Cosine thresholds depend on the embedder. The dependency-free `hashing`
+  # embedder produces sparse vectors that score far lower than transformer
+  # embeddings for the same pair. Measured on real collected articles:
+  #   hashing -> same story 0.19-0.21, unrelated 0.08-0.24 (the ranges overlap)
+  #   MiniLM  -> same story ~0.85,     unrelated ~0.30     (clearly separable)
+  # So with `hashing` the semantic checks are deliberately near-inert: they would
+  # produce more false warnings than real ones. URL and title dedup still run.
+  # Install the `embeddings` extra and set
+  # EMBEDDING_PROVIDER=sentence_transformers for real semantic dedup.
+  # The profile is chosen automatically from the active embedder name.
+  embedding_profiles:
+    hashing:
+      article_threshold: 0.45
+      published_post_threshold: 0.40
+      # Scores within this margin below the threshold are reported in review.md
+      # as a duplicate risk. Kept narrow on purpose (warns at >= 0.35), because
+      # unrelated pairs reach 0.24 with sparse vectors.
+      warn_margin: 0.10
+      # Intentionally unreachable: sparse vectors cannot separate "same story"
+      # from "same vocabulary", so this check is off for hashing.
+      intra_run_threshold: 0.75
+    dense:
+      article_threshold: 0.90
+      published_post_threshold: 0.84
+      warn_margin: 0.12
+      intra_run_threshold: 0.80
+
+rag:
+  collection_articles: articles
+  collection_posts: posts
+  collection_knowledge: knowledge
+  chunk_size: 1200
+  chunk_overlap: 150
+  # Context retrieved per selected item and handed to the agents.
+  retrieve_top_k: 5
+  min_similarity: 0.25
+  # Re-index knowledge/**/*.md when a file changes.
+  index_knowledge: true
+
+rank:
+  max_selected: ${MAX_SELECTED:-5}
+
+# 같은 사건을 다룬 여러 기사를 하나의 토픽으로 묶습니다. 묶인 기사는
+# research.json 의 sources[] 로 함께 전달되어 교차 확인 근거가 됩니다.
+#
+# 단일 신호로 판정하지 않습니다: 시간 근접성을 필수 조건으로 두고, 아래 신호 중
+# min_signals 개 이상이 동의할 때만 같은 사건으로 봅니다.
+cluster:
+  enabled: true
+  # 이 시간(시) 이상 떨어진 기사는 같은 사건으로 보지 않습니다.
+  window_hours: 72
+  # 동의해야 하는 최소 신호 수
+  min_signals: 2
+  # primary 외에 최대 몇 개까지 묶을지
+  max_members: 4
+  # anchor 규칙: 사건을 특정하는 공통 구절(phrase)이나 (동일 버전 + 동일 대상)이
+  # 없으면 묶지 않습니다. 흔한 단어만으로 묶이는 오탐을 막습니다.
+  require_anchor: true
+  thresholds:
+    # 제목 유사도 (버전/에디션이 다르면 core.text 가 0.6 으로 상한)
+    # 실측: 같은 사건 다른 매체 0.52, 무관한 릴리스 0.44 → 0.50
+    title: 0.50
+    # 제목의 비수치 토큰 containment (같은 제품/저장소를 가리키는지)
+    entity: 0.50
+    # 본문 토큰 Jaccard
+    body: 0.34
+    # 공통 내용어 bigram 수 / 2 (1개 공유 = 0.5). 사건 특정 구절 신호.
+    phrase: 0.5
+    # 임베딩 코사인 (dense embedder 에서만 의미 있음)
+    embedding: 0.80
+  # hashing 임베딩은 희소해 같은 사안/무관 구간이 겹칩니다(README 8절).
+  # sentence_transformers 로 바꾸면 자동으로 켜집니다.
+  use_embedding: false
+
+agents:
+  # Shared LLM settings; individual agents may override.
+  provider: ${LLM_PROVIDER:-mock}
+  temperature: 0.3
+  max_tokens: 2000
+  # Retries for malformed JSON responses.
+  json_retries: 2
+  research:
+    temperature: 0.2
+    max_tokens: 1800
+  fact_check:
+    temperature: 0.0
+    max_tokens: 1500
+  writer:
+    temperature: 0.6
+    max_tokens: 2200
+  editor:
+    temperature: 0.2
+    max_tokens: 2200
+
+fact_check:
+  # Items whose only evidence is social/community are demoted, never posted.
+  require_primary_source: true
+  # Verdicts allowed into the drafts.
+  allowed_verdicts: [verified, partially_verified]
+  # Below this confidence the claim is surfaced in review.md instead of used.
+  min_confidence: 0.6
+
+review:
+  # Recommend publishing only when every check passes.
+  auto_recommend_threshold: 0.8
+  checklist:
+    - unverified_claims
+    - missing_sources
+    - duplicate_risk
+    - tone_and_hype
+    - numbers_and_dates
+    - links_resolve
+
+output:
+  drafts_dir: outputs/drafts
+  archive_dir: outputs/archive
+  # Keep the N most recent draft directories in outputs/drafts, move older ones
+  # to outputs/archive. 0 disables archiving.
+  keep_recent_drafts: 12
+
+logging:
+  level: ${LOG_LEVEL:-INFO}
+  dir: logs
+  file: pipeline.log
+  # Rotate at 5 MB, keep 5 backups.
+  max_bytes: 5242880
+  backup_count: 5
+  json_console: false
+
+storage:
+  db_path: data/content.db
+  raw_dir: data/raw
+  processed_dir: data/processed
+  vectorstore_dir: data/vectorstore

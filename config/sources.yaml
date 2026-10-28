@@ -1,0 +1,235 @@
+# Collection sources.
+#
+# type        : rss | github_releases | arxiv   (maps to src/collectors/*)
+# category    : ai | blockchain
+# trust       : one of the tiers in config/ranking.yaml -> trust_scores
+# enabled     : set false to skip without deleting the entry
+# max_items   : per-source cap for a single run
+#
+# All enabled URLs below were verified to return a parseable feed on 2026-09-20.
+# A failing source logs a warning and never aborts the run, so re-check with
+#   make run   (see the "수집 상태" section of outputs/.../sources.md)
+# and fix the URL here rather than in code.
+
+defaults:
+  max_items: 15
+  timeout_seconds: 20
+  # Ignore anything older than this during collection.
+  lookback_days: 10
+
+sources:
+  # ---------------------------------------------------------------- AI / official
+  - id: openai_news
+    name: OpenAI News
+    type: rss
+    category: ai
+    trust: official
+    url: https://openai.com/news/rss.xml
+    enabled: true
+
+  - id: anthropic_news
+    name: Anthropic News
+    type: rss
+    category: ai
+    trust: official
+    # Anthropic publishes no public RSS feed: /news/rss.xml, /rss.xml and
+    # /news.rss all return 404 (checked 2026-09-20). Leave disabled until a feed
+    # exists, or add an HTML collector for https://www.anthropic.com/news.
+    url: https://www.anthropic.com/news/rss.xml
+    enabled: false
+
+  - id: deepmind_blog
+    name: Google DeepMind Blog
+    type: rss
+    category: ai
+    trust: official
+    url: https://deepmind.google/blog/rss.xml
+    enabled: true
+
+  - id: google_research_blog
+    name: Google Research Blog
+    type: rss
+    category: ai
+    trust: official
+    url: https://research.google/blog/rss/
+    enabled: true
+
+  - id: meta_engineering
+    name: Meta Engineering (AI infra)
+    type: rss
+    category: ai
+    trust: official
+    # ai.meta.com/blog has no feed (404); Meta's engineering blog does and covers
+    # the same infrastructure/AI announcements.
+    url: https://engineering.fb.com/feed/
+    enabled: true
+
+  - id: huggingface_blog
+    name: Hugging Face Blog
+    type: rss
+    category: ai
+    trust: official
+    url: https://huggingface.co/blog/feed.xml
+    enabled: true
+
+  - id: aws_ml_blog
+    name: AWS Machine Learning Blog
+    type: rss
+    category: ai
+    trust: official
+    url: https://aws.amazon.com/blogs/machine-learning/feed/
+    enabled: false
+
+  # ---------------------------------------------------------------- AI / github
+  - id: gh_vllm
+    name: vLLM Releases
+    type: github_releases
+    category: ai
+    trust: github
+    repo: vllm-project/vllm
+    enabled: true
+    max_items: 5
+
+  - id: gh_transformers
+    name: Hugging Face Transformers Releases
+    type: github_releases
+    category: ai
+    trust: github
+    repo: huggingface/transformers
+    enabled: true
+    max_items: 5
+
+  - id: gh_ollama
+    name: Ollama Releases
+    type: github_releases
+    category: ai
+    trust: github
+    repo: ollama/ollama
+    enabled: true
+    max_items: 5
+
+  - id: gh_langchain
+    name: LangChain Releases
+    type: github_releases
+    category: ai
+    trust: github
+    repo: langchain-ai/langchain
+    enabled: false
+    max_items: 5
+
+  # ---------------------------------------------------------------- AI / papers
+  - id: arxiv_ai
+    name: arXiv cs.AI / cs.LG / cs.CL
+    type: arxiv
+    category: ai
+    trust: paper
+    # arXiv API search query. Keep it narrow; ranking will filter further.
+    query: cat:cs.AI OR cat:cs.LG OR cat:cs.CL
+    enabled: true
+    max_items: 20
+
+  # ---------------------------------------------------- blockchain / official
+  - id: ethereum_blog
+    name: Ethereum Foundation Blog
+    type: rss
+    category: blockchain
+    trust: official
+    url: https://blog.ethereum.org/en/feed.xml
+    enabled: true
+
+  - id: solana_news
+    name: Solana News
+    type: rss
+    category: blockchain
+    trust: official
+    url: https://solana.com/news/rss.xml
+    enabled: true
+
+  - id: coinbase_blog
+    name: Coinbase Blog
+    type: rss
+    category: blockchain
+    trust: official
+    # Coinbase sits behind Cloudflare bot protection: a plain GET returns 403
+    # ("Just a moment...") for both /blog/rss.xml and blog.coinbase.com/feed
+    # (checked 2026-09-20). Would need a browser-like client to collect.
+    url: https://www.coinbase.com/blog/rss.xml
+    enabled: false
+
+  - id: sui_blog
+    name: Sui Blog
+    type: rss
+    category: blockchain
+    trust: official
+    # blog.sui.io/rss.xml and /feed.xml return the Webflow HTML page, not a feed
+    # (checked 2026-09-20). GitHub releases below cover Sui in the meantime.
+    url: https://blog.sui.io/rss.xml
+    enabled: false
+
+  - id: base_blog
+    name: Base Blog
+    type: rss
+    category: blockchain
+    trust: official
+    # Base publishes via Mirror, which returns 403 to non-browser clients
+    # (checked 2026-09-20).
+    url: https://base.mirror.xyz/feed/atom
+    enabled: false
+
+  # -------------------------------------------------- blockchain / github
+  - id: gh_go_ethereum
+    name: go-ethereum Releases
+    type: github_releases
+    category: blockchain
+    trust: github
+    repo: ethereum/go-ethereum
+    enabled: true
+    max_items: 5
+
+  - id: gh_solana
+    name: Agave (Solana validator) Releases
+    type: github_releases
+    category: blockchain
+    trust: github
+    repo: anza-xyz/agave
+    enabled: true
+    max_items: 5
+
+  - id: gh_sui
+    name: Sui Releases
+    type: github_releases
+    category: blockchain
+    trust: github
+    repo: MystenLabs/sui
+    enabled: true
+    max_items: 5
+
+  - id: gh_reth
+    name: Reth Releases
+    type: github_releases
+    category: blockchain
+    trust: github
+    repo: paradigmxyz/reth
+    enabled: false
+    max_items: 5
+
+  # -------------------------------------------------- blockchain / research
+  - id: arxiv_blockchain
+    name: arXiv blockchain / cryptography
+    type: arxiv
+    category: blockchain
+    trust: paper
+    query: all:blockchain OR all:"zero knowledge proof"
+    enabled: true
+    max_items: 10
+
+  # ---------------------------------------------------------------- news tier
+  # Secondary reporting. Used for corroboration only - never as the sole basis
+  # for a post (see config/pipeline.yaml -> fact_check.require_primary_source).
+  - id: techcrunch_ai
+    name: TechCrunch AI
+    type: rss
+    category: ai
+    trust: major_news
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    enabled: false

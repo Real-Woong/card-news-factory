@@ -1,0 +1,59 @@
+# SNS channel definitions. Phase 1 writes files only; `publish: false`
+# everywhere. Phase 2 will flip these on per channel.
+
+defaults:
+  language: ko
+  # Secondary language block appended to drafts (null to disable).
+  secondary_language: en
+  include_sources: true
+  hashtag_limit: 5
+
+channels:
+  - id: x_short
+    name: X (Twitter) short form
+    format: shortform
+    enabled: true
+    publish: false
+    max_chars: 280
+    # Thread mode: split into N tweets when the body exceeds max_chars.
+    thread: true
+    max_thread_items: 5
+    hashtag_limit: 3
+    style: "punchy, one idea per tweet, no marketing tone"
+
+  - id: linkedin_long
+    name: LinkedIn long form
+    format: longform
+    enabled: true
+    publish: false
+    max_chars: 2800
+    hashtag_limit: 5
+    style: "analytical, what changed and why it matters for builders"
+
+  - id: threads_short
+    name: Threads
+    format: shortform
+    enabled: false
+    publish: false
+    max_chars: 500
+    hashtag_limit: 3
+    style: "conversational but factual"
+
+  - id: blog_long
+    name: Personal blog / newsletter
+    format: longform
+    enabled: false
+    publish: false
+    max_chars: 8000
+    hashtag_limit: 0
+    style: "deep dive with code-level detail where relevant"
+
+# Which draft files to emit. Keys map to writers in src/pipeline/outputs.py.
+outputs:
+  research_json: true
+  selected_topics_json: true
+  sources_md: true
+  post_longform_md: true
+  post_shortform_md: true
+  review_md: true
+  run_metadata_json: true

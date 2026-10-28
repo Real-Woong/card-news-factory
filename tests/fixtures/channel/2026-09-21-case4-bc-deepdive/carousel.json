@@ -1,0 +1,257 @@
+{
+  "channel": "instagram",
+  "brand": "R_A_Glance",
+  "template": "deep_dive",
+  "topic": "BLOCKCHAIN",
+  "headline": "Solana Changelog: 2026년 9월 3일",
+  "slides": [
+    {
+      "index": 1,
+      "type": "cover",
+      "eyebrow": "BLOCKCHAIN / SOLANA",
+      "headline": "Solana Changelog 9월 3일: Mainnet feature gate 3건과 신규 클라이언트",
+      "subtitle": "lamports per byte 6333, BPF Stake Program v5.1.0, Agave v4.4.0-alpha.2 동시 반영",
+      "render": {
+        "index": 1,
+        "png": "01.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 2,
+      "type": "content",
+      "title": "이번 Changelog의 범위",
+      "body": [
+        "Solana Foundation이 9월 3일자 이슈를 9월 10일 발행",
+        "Mainnet feature gate 3건이 이번 업데이트의 중심",
+        "Agave, Web3.js, Solana Kit 신규 Release 동시 공개",
+        "Firedancer는 RPC 사양 준수와 ARM 지원을 확대"
+      ],
+      "render": {
+        "index": 2,
+        "png": "02.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 3,
+      "type": "content",
+      "title": "Mainnet feature gate 3건",
+      "body": [
+        "lamports per byte를 6333으로 설정",
+        "post-execution min_balance 검사를 완화",
+        "BPF Stake Program을 v5.1.0으로 업그레이드",
+        "Devnet·Testnet은 Transaction V1과 Custom Commission Collector 추가",
+        "Testnet은 lamports per byte를 5080으로 설정"
+      ],
+      "render": {
+        "index": 3,
+        "png": "03.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 4,
+      "type": "content",
+      "title": "신규 클라이언트 Release",
+      "body": [
+        "Agave v4.4.0-alpha.2, v4.3.0-beta.3, v4.2.2 공개",
+        "Web3.js v3.0.0-rc.3, v1.99.0-beta.0 공개",
+        "Solana Kit v8.2.0, v8.1.0 공개",
+        "Superbank v0.6.0-rc1 공개"
+      ],
+      "render": {
+        "index": 4,
+        "png": "04.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 5,
+      "type": "content",
+      "title": "Firedancer와 Agave 변경",
+      "body": [
+        "Firedancer가 getSlotLeader, getSlotLeaders, getLeaderSchedule RPC 채택",
+        "Firedancer는 x86_64 전용 명령을 대체해 ARM Validator 실행 지원",
+        "Firedancer program cache를 class 기반 메모리 할당으로 전환",
+        "Agave는 동일 우선순위 트랜잭션을 도착 시간 순으로 정렬",
+        "Agave는 TPU vote·forwards·Votor에서 사설·로컬 주소 차단"
+      ],
+      "render": {
+        "index": 5,
+        "png": "05.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 6,
+      "type": "content",
+      "title": "운영자가 챙길 지점",
+      "body": [
+        "lamports per byte 6333 변경은 저장 비용 회계에 직접 영향",
+        "BPF Stake Program v5.1.0은 staking 동작에 영향",
+        "Firedancer ARM 지원으로 배포 선택지 확대",
+        "RPC 사양 준수로 Validator·RPC 소비자 간 상호운용성 개선"
+      ],
+      "render": {
+        "index": 6,
+        "png": "06.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "1086/1086 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    },
+    {
+      "index": 7,
+      "type": "closing",
+      "title": "Takeaway",
+      "body": [
+        "Mainnet feature gate 3건과 신규 클라이언트를 지금 확인",
+        "lamports per byte 6333과 BPF Stake Program v5.1.0이 운영 핵심"
+      ],
+      "extra_title": "What to watch next",
+      "extra_body": [
+        "세 feature gate의 활성화 시점과 slot 번호는 아직 공개되지 않음",
+        "BPF Stake Program v5.1.0 마이그레이션 절차는 아직 안내되지 않음"
+      ],
+      "sources": [
+        {
+          "name": "Solana News",
+          "url": "https://solana.com/news/solana-changelog-september-3-2026",
+          "verdict": "partially_verified"
+        }
+      ],
+      "render": {
+        "index": 7,
+        "png": "07.png",
+        "fit": "ok",
+        "fit_scale": 1.0,
+        "metrics": "931/931 slide 1350/1350",
+        "size": "1080x1350"
+      }
+    }
+  ],
+  "caption": "Solana 9월 3일 Changelog가 Mainnet feature gate 3건을 정리했다.\n\nlamports per byte가 6333으로 설정되고 post-execution min_balance 검사가 완화되며 BPF Stake Program이 v5.1.0으로 올라갔다.\nDevnet과 Testnet은 Transaction V1과 Custom Commission Collector를 추가했고 Testnet의 lamports per byte는 5080으로 설정됐다.\n클라이언트 Release도 함께 나왔다. Agave v4.4.0-alpha.2, Web3.js v3.0.0-rc.3, Solana Kit v8.2.0이 공개됐다.\nFiredancer는 getSlotLeader, getSlotLeaders, getLeaderSchedule RPC를 채택하고 x86_64 전용 명령을 대체해 ARM Validator 실행을 지원한다.\nAgave는 동일 우선순위 트랜잭션을 도착 시간 순으로 정렬하고 TPU vote·forwards·Votor에서 사설·로컬 주소를 차단한다.\n\n운영자는 lamports per byte 6333과 BPF Stake Program v5.1.0을 먼저 점검할 지점으로 둘 만하다.\n\nSources: Solana News",
+  "hashtags": [
+    "#Blockchain",
+    "#Solana",
+    "#Firedancer",
+    "#Validator",
+    "#Agave"
+  ],
+  "meta": {
+    "topic_id": "246f2af5ef898b11fc03128c1d1b74483adfd7738de5d4b1e4d8adc8b0cae582",
+    "engine_headline": "Solana Changelog: September 3, 2026",
+    "fact_check_verdict": "partially_verified",
+    "plan": {
+      "template": "deep_dive",
+      "slides": 7,
+      "reason": "CLI --template deep_dive 로 지정",
+      "audience": "",
+      "slide_plan": [
+        {
+          "index": 1,
+          "type": "cover",
+          "role": "Hook",
+          "goal": "Hook"
+        },
+        {
+          "index": 2,
+          "type": "content",
+          "role": "Context",
+          "goal": "Context"
+        },
+        {
+          "index": 3,
+          "type": "content",
+          "role": "What changed",
+          "goal": "What changed"
+        },
+        {
+          "index": 4,
+          "type": "content",
+          "role": "Key detail 1",
+          "goal": "Key detail 1"
+        },
+        {
+          "index": 5,
+          "type": "content",
+          "role": "Key detail 2",
+          "goal": "Key detail 2"
+        },
+        {
+          "index": 6,
+          "type": "content",
+          "role": "Why it matters",
+          "goal": "Why it matters"
+        },
+        {
+          "index": 7,
+          "type": "closing",
+          "role": "Takeaway + Sources",
+          "goal": "Takeaway + Sources"
+        }
+      ]
+    },
+    "sources": [
+      {
+        "name": "Solana News",
+        "url": "https://solana.com/news/solana-changelog-september-3-2026",
+        "verdict": "partially_verified"
+      }
+    ],
+    "unverified_claims": [],
+    "research_summary": {
+      "what_changed": "The September 3, 2026 Solana Changelog reports three mainnet feature gates (lamports per byte set to 6333, relaxation of the post-execution min_balance check, BPF Stake Program upgraded to v5.1.0) plus new client releases including Agave v4.4.0-alpha.2, Web3.js v3.0.0-rc.3, and Solana Kit v8.2.0. Firedancer adopted three RPC calls (getSlotLeader, getSlotLeaders, getLeaderSchedule) and added ARM validator support.",
+      "why_it_matters": "Operators must note the mainnet lamports-per-byte change to 6333 and the BPF Stake Program v5.1.0 upgrade as they affect storage cost accounting and staking behavior. Firedancer's ARM support and new RPC-spec compliance broaden deployment options and improve client interoperability for validator operators and RPC consumers.",
+      "key_facts": [
+        "Mainnet feature gate sets lamports per byte to 6333",
+        "Mainnet feature gate relaxes the post-execution min_balance check",
+        "Mainnet feature gate upgrades the BPF Stake Program to v5.1.0",
+        "Devnet and Testnet add Transaction V1 and Custom Commission Collector feature gates; Testnet sets lamports per byte to 5080",
+        "New Agave versions: v4.4.0-alpha.2, v4.3.0-beta.3, v4.2.2",
+        "New Solana Web3.js versions: v3.0.0-rc.3 and v1.99.0-beta.0",
+        "New Solana Kit versions: v8.2.0 and v8.1.0",
+        "Superbank v0.6.0-rc1 released",
+        "Firedancer adopted three RPC calls: getSlotLeader, getSlotLeaders, and getLeaderSchedule, all part of the Solana RPC spec",
+        "Firedancer will support running its validator client on ARM systems by finding alternative instructions to x86_64-only ones",
+        "Firedancer will use a class-based memory allocator for its program cache instead of heap-based allocation",
+        "Agave will order same-priority transactions based on arrival time",
+        "Agave now disallows private or local addresses from being used by the TPU vote service, TPU forwards service, and Votor",
+        "Issue is dated September 3, 2026 and was published September 10, 2026 by the Solana Foundation"
+      ]
+    },
+    "editor_changes": [
+      "slide 2: '신규 Release가 함께 공개'를 '신규 Release 동시 공개'로 압축",
+      "slide 5: 마지막 문장 '사용을 차단'을 '차단'으로 압축(사실 유지)",
+      "기타 슬라이드: 검증된 숫자·버전·날짜 유지, banned/never_write 표현 없어 변경 없음"
+    ],
+    "llm_usage": {
+      "calls": 3,
+      "failures": 0,
+      "credits": 0.62,
+      "seconds": 35.0,
+      "calls_per_task": {
+        "ig_write": 1,
+        "ig_edit": 1,
+        "ig_caption": 1
+      }
+    }
+  }
+}

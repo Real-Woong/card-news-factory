@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- 사람이 브라우저에서 캐러셀 전체를 한 번에 확인하는 용도. 게시물이 아닙니다. -->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>Solana Changelog: 2026년 9월 3일 — R_A_Glance preview</title>
+    <style>
+      :root {
+        --bg: #0D0D0D;
+        --fg: #F5F5F5;
+        --muted: rgba(245, 245, 245, 0.62);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 48px 40px 72px;
+        background: #141414;
+        color: var(--fg);
+        font-family: "Apple SD Gothic Neo", "Helvetica Neue", Inter, system-ui, sans-serif;
+      }
+      header { max-width: 1400px; margin: 0 auto 32px; }
+      h1 { font-size: 28px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
+      .meta { font-size: 15px; color: var(--muted); line-height: 1.7; }
+      .meta code { font-size: 14px; }
+      .strip {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 28px;
+      }
+      figure { margin: 0; }
+      figure img {
+        width: 100%;
+        display: block;
+        background: var(--bg);
+        border: 1px solid rgba(245, 245, 245, 0.14);
+      }
+      figcaption {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .caption-block {
+        max-width: 1400px;
+        margin: 56px auto 0;
+        border-top: 1px solid rgba(245, 245, 245, 0.14);
+        padding-top: 28px;
+      }
+      .caption-block h2 { font-size: 18px; margin: 0 0 14px; }
+      pre {
+        white-space: pre-wrap;
+        font-family: inherit;
+        font-size: 16px;
+        line-height: 1.75;
+        margin: 0;
+        color: #E8E8E8;
+      }
+      .tags { margin-top: 18px; font-size: 15px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Solana Changelog: 2026년 9월 3일</h1>
+      <div class="meta">
+        template <code>deep_dive</code> · 7 slides ·
+        topic <code>BLOCKCHAIN</code> · 1080×1350<br />
+        생성 2026-09-21T03:37:09.566953+00:00 · 검수 전 초안 (게시 금지)
+      </div>
+    </header>
+
+    <div class="strip"><figure><img src="slides/01.png" alt="slide 1" /><figcaption><span>01 · COVER</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/02.png" alt="slide 2" /><figcaption><span>02 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/03.png" alt="slide 3" /><figcaption><span>03 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/04.png" alt="slide 4" /><figcaption><span>04 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/05.png" alt="slide 5" /><figcaption><span>05 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/06.png" alt="slide 6" /><figcaption><span>06 · CONTENT</span><span>fit ok ×1</span></figcaption></figure>
+<figure><img src="slides/07.png" alt="slide 7" /><figcaption><span>07 · CLOSING</span><span>fit ok ×1</span></figcaption></figure></div>
+
+    <section class="caption-block">
+      <h2>caption.md</h2>
+      <pre>Solana 9월 3일 Changelog가 Mainnet feature gate 3건을 정리했다.
+
+lamports per byte가 6333으로 설정되고 post-execution min_balance 검사가 완화되며 BPF Stake Program이 v5.1.0으로 올라갔다.
+Devnet과 Testnet은 Transaction V1과 Custom Commission Collector를 추가했고 Testnet의 lamports per byte는 5080으로 설정됐다.
+클라이언트 Release도 함께 나왔다. Agave v4.4.0-alpha.2, Web3.js v3.0.0-rc.3, Solana Kit v8.2.0이 공개됐다.
+Firedancer는 getSlotLeader, getSlotLeaders, getLeaderSchedule RPC를 채택하고 x86_64 전용 명령을 대체해 ARM Validator 실행을 지원한다.
+Agave는 동일 우선순위 트랜잭션을 도착 시간 순으로 정렬하고 TPU vote·forwards·Votor에서 사설·로컬 주소를 차단한다.
+
+운영자는 lamports per byte 6333과 BPF Stake Program v5.1.0을 먼저 점검할 지점으로 둘 만하다.
+
+Sources: Solana News</pre>
+      <div class="tags">#Blockchain #Solana #Firedancer #Validator #Agave</div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd job (channel): every Wednesday and Sunday at 08:30 local time make one card from this
+  week's list (the Monday engine run), run the auto-approval gate and, if approved, post it
+  (scripts/run_channel.sh). Posting itself is controlled by instagram.yaml (auto_publish).
+
+  {{PROJECT_DIR}} is replaced by scripts/install_launchd.sh.
+  Weekday values: 1 = Monday ... 5 = Friday (0 and 7 both mean Sunday).
+
+  If the Mac is asleep at the scheduled time, launchd runs the job as soon as it
+  wakes. Use `launchctl kickstart -k gui/$(id -u)/com.contentops.channel` to
+  trigger a run manually.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.contentops.channel</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <!-- Explicit interpreter: macOS privacy (TCC) grants Full Disk Access per program, and this
+             project lives under ~/Desktop. Grant /bin/bash in System Settings -> Privacy & Security
+             -> Full Disk Access, otherwise launchd gets "Operation not permitted" (exit 126). -->
+        <string>/bin/bash</string>
+        <string>{{PROJECT_DIR}}/scripts/run_channel.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>{{PROJECT_DIR}}</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>LANG</key>
+        <string>en_US.UTF-8</string>
+    </dict>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Weekday</key>
+            <integer>3</integer>
+            <key>Hour</key>
+            <integer>8</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+        </dict>
+        <dict>
+            <key>Weekday</key>
+            <integer>0</integer>
+            <key>Hour</key>
+            <integer>8</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+        </dict>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>{{PROJECT_DIR}}/logs/launchd.channel.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{PROJECT_DIR}}/logs/launchd.channel.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+</dict>
+</plist>

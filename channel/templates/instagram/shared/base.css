@@ -1,0 +1,521 @@
+/* R_A_Glance — 공통 레이아웃
+ *
+ * 색상/사이즈는 renderer 가 brand.yaml 값을 CSS 변수로 주입합니다.
+ * 이 파일에 색상 리터럴이나 픽셀 상수를 직접 쓰지 않습니다(--var 사용).
+ *
+ * 금지: gradient, glow, shadow, border-radius 장식, 사진·일러스트.
+ * 포인트 컬러(--accent)는 강조선·eyebrow·진행바·dash·차트 강조에만 쓰고 본문 글자색에는 쓰지 않는다.
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.slide {
+  position: relative;
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  padding: var(--margin-y) var(--margin-x);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  isolation: isolate;
+}
+
+/* 상단 / 중앙 / 하단 3분할. 중앙이 남는 공간을 차지합니다. */
+.slide__top {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.slide__main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  /* 균일성: 본문은 세로 중앙정렬이 아니라 위쪽 고정이다. 슬라이드마다 제목 위치(y)가 같아야
+   * 넘길 때 틀이 흔들리지 않는다. 남는 아래 공간은 큰 슬라이드 번호·차트가 채운다. */
+  justify-content: flex-start;
+  padding-top: var(--main-top);
+  gap: var(--title-body-gap);
+  /* autofit 측정 기준 컨테이너 */
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* closing: 출처는 본문 영역 아래쪽에 고정. */
+.slide--closing .sources {
+  margin-top: calc(var(--gap) * 2);
+}
+
+.slide__bottom {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding-top: var(--gap);
+}
+
+/* 얇은 구분선. 장식이 아니라 계층 표시용. */
+.hairline {
+  border-top: 1px solid var(--hairline);
+  padding-top: calc(var(--gap) * 0.7);
+}
+
+.slide__bottom {
+  align-items: center;
+}
+
+.slide__tagline {
+  color: var(--muted);
+}
+
+/* ---- 로고 (channel/src/renderer.py _logo_html) --------------------------- */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--fg);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* 기본 로고: 사각 렌즈(Glance = 한눈에 보다) + 워드마크. 색은 테마(--accent/--fg)를 따른다. */
+.logo__mark {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border: 4px solid var(--accent);
+}
+
+.logo__mark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+}
+
+.logo__text {
+  font-size: calc(var(--meta-size) * 1.15);
+  font-weight: 400;
+}
+
+.logo__text b {
+  font-weight: 800;
+}
+
+/* 파일 로고: mask 는 단색 로고를 글자색(--fg)으로 칠한다 → 어떤 테마에서도 대비 보장. */
+.logo--mask {
+  display: inline-block;
+  background: var(--fg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+.logo--image {
+  display: block;
+}
+
+/* 원형 배지 로고(JPG 등 투명 배경이 없는 파일): 원으로 잘라 모서리의 흰색을 없앤다.
+ * 검정 바탕에서도 원이 보이게 얇은 테두리(--muted)를 두른다. */
+.logo--circle {
+  flex: 0 0 auto;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
+  outline: 2px solid var(--muted);
+  outline-offset: 0;
+}
+
+.logo--circle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+}
+
+.slide-number {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 본문 리스트: bullet 은 짧은 dash 하나만 사용 */
+.body-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--body-gap);
+}
+
+.body-list li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: start;
+}
+
+.body-list li::before {
+  content: "—";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* 출처 블록. closing slide 에서 main 과 footer 사이에 고정되어,
+ * takeaway 가 짧아도 SOURCES 아래에 빈 띠가 남지 않습니다. */
+.slide__sources {
+  flex: 0 0 auto;
+  padding-bottom: calc(var(--gap) * 0.8);
+}
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* closing variant A 의 두 번째 블록. 라벨은 meta 스타일로 낮추고 본문은 동일 크기. */
+.closing-extra {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+
+.closing-extra__label {
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.sources__label {
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.sources__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 18px;
+}
+
+.sources__list span:not(:last-child)::after {
+  content: " ·";
+  color: var(--muted);
+}
+
+/* ---- 포인트 컬러 · 진행바 ------------------------------------------------ */
+/* 상단 진행바: 트랙은 hairline, 채움은 accent. 슬라이드 위치를 한눈에 보여줍니다. */
+.slide__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: var(--hairline);
+}
+
+.slide__progress::after {
+  content: "";
+  display: block;
+  width: var(--progress);
+  height: 100%;
+  background: var(--accent);
+}
+
+.slide__eyebrow {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* content title 앞 강조 세로선 */
+.slide--content .t-title {
+  border-left: 12px solid var(--accent);
+  padding-left: 28px;
+}
+
+/* ---- 숫자 차트 블록 (channel/src/visual.py) ----------------------------- */
+/* 포인트 컬러는 차트의 강조 값에만 쓴다. 막대의 '이전' 쪽은 muted. */
+.visual {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+
+.visual--stat {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.visual__number {
+  font-size: calc(176px * var(--fit, 1));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.visual__unit {
+  font-size: calc(80px * var(--fit, 1));
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.vbar {
+  display: grid;
+  grid-template-columns: 84px 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.vbar__label {
+  color: var(--muted);
+}
+
+.vbar__track {
+  height: 40px;
+  background: var(--hairline);
+}
+
+.vbar__fill {
+  height: 100%;
+  background: var(--muted);
+}
+
+.vbar--after .vbar__fill {
+  background: var(--accent);
+}
+
+.vbar__value {
+  min-width: 160px;
+  text-align: right;
+  font-size: calc(var(--title-size) * 0.85 * var(--fit, 1));
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.vbar--after .vbar__value {
+  color: var(--accent);
+}
+
+/* ---- 배경 테마 (channel/src/layout.py, channel/src/colors.py) ---------------- */
+/* 테마별 --bg/--fg/--muted/--hairline/--accent 는 renderer 가 코드에서 대비를 계산해 주입한다.
+ * CSS 로 색을 뒤집지 않는다(상속되는 글자색이 안 바뀌어 흰 바탕에 흰 글씨가 났던 문제의 원인). */
+
+/* ---- 장식: 큰 흐린 슬라이드 번호, 숫자 강조 -------------------------------- */
+/* 글자 뒤(z-index -1)에 깔고 슬라이드 안쪽에 둬서 autofit 측정에 영향이 없게 한다. */
+/* 읽는 사람을 돕는 줄: 본문 아래 남는 공간 맨 아래에 붙인다(흐름 안이라 autofit 이 측정한다). */
+.aids {
+  margin-top: auto;
+  padding-top: calc(var(--gap) * 1.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 78%;
+}
+.aids__label { color: var(--muted); }
+.aid { margin: 0; font-size: calc(var(--body-size) * 0.72 * var(--fit, 1)); line-height: 1.4; }
+.aid--gloss { color: var(--muted); }
+.aid--gloss b { color: var(--fg); font-weight: 700; }
+.aid--cta { color: var(--accent); font-weight: 700; }
+
+.slide__ghost {
+  position: absolute;
+  right: calc(var(--margin-x) - 12px);
+  bottom: 150px;
+  z-index: -1;
+  font-size: 240px;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: var(--hairline);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.hl {
+  background: none;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ---- 레이아웃: numbered (큰 01 02 03) ------------------------------------- */
+.slide--layout-numbered .body-list {
+  counter-reset: item;
+  gap: calc(var(--body-gap) * 1.6);
+}
+
+.slide--layout-numbered .body-list li {
+  grid-template-columns: 132px 1fr;
+  align-items: baseline;
+}
+
+.slide--layout-numbered .body-list li::before {
+  counter-increment: item;
+  content: counter(item, decimal-leading-zero);
+  font-size: calc(72px * var(--fit, 1));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.slide--layout-numbered .t-body {
+  font-size: calc(var(--body-size) * 1.08 * var(--fit, 1));
+}
+
+/* ---- 레이아웃: timeline (세로선 + 점) ------------------------------------- */
+.slide--layout-timeline .body-list {
+  position: relative;
+  padding-left: 56px;
+  gap: calc(var(--body-gap) * 1.5);
+}
+
+.slide--layout-timeline .body-list::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 14px;
+  bottom: 14px;
+  width: 4px;
+  background: var(--hairline);
+}
+
+.slide--layout-timeline .body-list li {
+  display: block;
+  position: relative;
+}
+
+.slide--layout-timeline .body-list li::before {
+  content: "";
+  position: absolute;
+  left: -56px;
+  top: 0.55em;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+}
+
+/* ---- 레이아웃: takeaway (closing) ----------------------------------------- */
+/* takeaway 문장은 크고 굵게, "What to watch next" 는 체크 박스 목록으로. */
+.slide--layout-takeaway .t-title {
+  font-size: calc(34px * var(--fit, 1));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.slide--layout-takeaway .slide__main > .body-list li {
+  display: block;
+}
+
+.slide--layout-takeaway .slide__main > .body-list li::before {
+  content: none;
+}
+
+.slide--layout-takeaway .slide__main > .body-list .t-body {
+  font-size: calc(46px * var(--fit, 1));
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+}
+
+.body-list--checklist li {
+  grid-template-columns: 52px 1fr;
+  align-items: start;
+}
+
+.body-list--checklist li::before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  margin-top: 0.22em;
+  border: 4px solid var(--accent);
+  background: none;
+}
+
+/* ---- 표지 (피드에서 가장 먼저 보이는 장) ------------------------------------ */
+/* 구성: 큰 로고 일러스트(남는 높이) → 제목 → 부제 → 스와이프 신호. 색은 모두 테마에서 온다.
+ * 일러스트는 본문 흐름의 첫 요소라 제목이 길면 작아질 뿐 글자와 겹치지 않는다. */
+.slide--cover .slide__main {
+  justify-content: flex-start;
+  padding-top: 0;
+  padding-bottom: var(--cover-bottom);
+  gap: calc(var(--gap) * 1.1);
+}
+
+.cover__art {
+  flex: 1 1 0;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  color: var(--fg);
+}
+
+.cover__art--logo span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+.cover__art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.slide--cover .t-headline {
+  font-size: calc(var(--headline-size) * 1.2 * var(--fit, 1));
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* 썸네일(약 360px)에서도 읽히도록 부제는 흐리지 않고 굵게 */
+.slide--cover .t-subtitle {
+  color: var(--fg);
+  font-size: calc(var(--subtitle-size) * 0.9 * var(--fit, 1));
+  font-weight: 600;
+}
+
+.cover__cue {
+  align-self: flex-start;
+  margin-top: calc(var(--gap) * 0.4);
+  padding: 14px 26px;
+  border: 4px solid var(--fg);
+  font-size: calc(30px * var(--fit, 1));
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}

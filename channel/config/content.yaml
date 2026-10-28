@@ -1,0 +1,329 @@
+# 콘텐츠 구조 설정: carousel 타입, slide 구성, 길이 예산, 톤 규칙
+#
+# slide 서사 구조를 코드가 아니라 여기서 관리합니다. planner 는 이 정의를 읽고
+# 타입을 선택하며, validator 는 이 값으로 구조를 검증합니다.
+
+templates:
+  news_short:
+    slides: 3
+    when: "단일 release, 간단한 announcement, 핵심 fact 1~2개"
+    sections:
+      - { index: 1, type: cover,   role: "Hook / Headline" }
+      - { index: 2, type: content, role: "What changed" }
+      - { index: 3, type: closing, role: "Why it matters + Takeaway + Sources" }
+
+  news_standard:
+    slides: 5
+    default: true
+    when: "기본값. 변화가 하나의 스토리로 설명되고 key fact 2~4개"
+    sections:
+      - { index: 1, type: cover,   role: "Hook / Headline" }
+      - { index: 2, type: content, role: "What happened" }
+      - { index: 3, type: content, role: "What changed" }
+      - { index: 4, type: content, role: "Why it matters" }
+      - { index: 5, type: closing, role: "Takeaway + Sources" }
+
+  deep_dive:
+    slides: 7
+    when: "protocol change, architecture, 기술 비교, key fact 5개 이상, 운영자 영향"
+    sections:
+      - { index: 1, type: cover,   role: "Hook" }
+      - { index: 2, type: content, role: "Context" }
+      - { index: 3, type: content, role: "What changed" }
+      - { index: 4, type: content, role: "Key detail 1" }
+      - { index: 5, type: content, role: "Key detail 2" }
+      - { index: 6, type: content, role: "Why it matters" }
+      - { index: 7, type: closing, role: "Takeaway + Sources" }
+
+# 텍스트 밀도 예산. 렌더 전에 validator 가 경고하고, 렌더 중 overflow 는 BLOCK.
+text_budget:
+  cover:
+    eyebrow_max_chars: 34
+    headline_max_chars: 78      # 약 2~3줄
+    headline_warn_chars: 62
+    subtitle_max_chars: 40      # 1줄(피드 썸네일에서 읽히려면 짧아야 한다)
+  content:
+    title_max_chars: 46         # 1~2줄
+    body_min_items: 2
+    body_max_items: 5
+    body_item_max_chars: 92
+    body_total_max_chars: 380
+    # 항목 수는 채웠지만 글자가 너무 적으면 슬라이드가 시각적으로 비어 보입니다.
+    # 문장을 늘리라는 뜻이 아니라, 더 짧은 템플릿이 맞았는지 재검토하라는 신호입니다.
+    body_total_min_chars: 90
+  closing:
+    title_max_chars: 34
+    body_min_items: 1
+    body_max_items: 3
+    body_item_max_chars: 92
+    # variant A 의 두 번째 블록 (What to watch next)
+    secondary_title_max_chars: 34
+    secondary_body_min_items: 1
+    secondary_body_max_items: 2
+    secondary_body_item_max_chars: 92
+
+# 표지(첫 장) 장식. cue 는 스와이프 신호("넘겨서 보기 · 7장 →"), 비우면 표시하지 않는다.
+cover:
+  cue: "넘겨서 보기"
+
+# 표지 제목 후보 3개(질문·숫자·반전, channel/src/hook.py). 후보마다 코드가 검사하고 통과한
+# 것만 review.md·preview.html 에 보여 준다. 고른 제목도 근거 심사·validator 를 다시 거친다.
+hook:
+  enabled: true
+  # 과장 표현 금지어(포함되면 후보 탈락). 정확성이 이 채널의 가치라 어그로는 사실 범위 안에서만.
+  banned: ["충격", "경악", "대박", "난리", "미쳤", "역대급", "폭등", "폭락", "무조건", "100%", "반드시 오른다", "지금 사야", "놓치면"]
+
+# 숫자 차트 블록(stat / 전·후 비교). 슬라이드 문구에서 단위가 붙은 숫자만 코드로 뽑는다
+# (LLM 호출·새 사실 없음). 후보가 없으면 붙이지 않는다. channel/src/visual.py 참고.
+visual:
+  enabled: true
+  max_per_carousel: 2
+  # 이 이상 빽빽한 슬라이드에는 붙이지 않는다(autofit 이 글자를 더 줄이게 되므로)
+  # (넘치면 renderer 가 글자를 줄이다가 그래도 안 되면 차트만 뺀다)
+  max_body_lines: 4
+  max_body_chars: 240
+
+# 슬라이드 레이아웃·배경 테마(channel/src/layout.py). 문구는 그대로 두고 보여주는 방식만 고른다.
+# 렌더 때 계산하며 승인 해시(문구)에는 영향이 없다. 넘치면 차트 → 레이아웃 순으로 걷어낸다.
+layout:
+  enabled: true
+  # role 에 이 문구가 들어 있는 content 슬라이드 한 장에 key_theme 을 적용한다(없으면 closing).
+  key_role: "why it matters"
+  # 표지는 포인트 컬러로 꽉 채운다 — 검은 슬라이드들 사이에서 첫 장만 색 면이라 피드에서 가장 먼저 보인다.
+  cover_theme: accent
+  # 표지가 이미 채움이므로 핵심 장(Why it matters)은 채우지 않는다(채움이 둘이면 희석된다).
+  key_theme: dark
+  # 큰 01 02 03 번호 카드로 보여줄 역할과 줄 수 범위
+  # (연달아 반복되지 않게 Key detail 1 은 기본 목록)
+  numbered_roles: ["what changed", "key detail 2"]
+  numbered_min_lines: 2
+  numbered_max_lines: 4
+  # 날짜가 든 줄이 이 개수 이상이면 타임라인(세로선 + 점)
+  timeline_min_dates: 3
+  # 슬라이드 수 → 흰 바탕으로 반전할 슬라이드 번호
+  light_slides:
+    7: [4]
+
+# closing slide 구성 방식. takeaway 1줄만 있으면 하단이 비어 보이므로 두 가지를
+# 실험 중입니다. 값을 바꾸면 writer 지시·렌더·검증이 함께 따라갑니다.
+#
+#   A: Takeaway + What to watch next + Sources   (라벨 2개, 각 1~2줄)
+#   B: Takeaway 2줄 + Sources                     (라벨 1개, 2줄 고정)
+#
+# 어느 쪽도 문장을 억지로 늘리지 않습니다. 재료가 없으면 writer 가 1줄만 쓰고
+# validator 가 경고로 알립니다.
+# closing slide 구성. **variant A 확정** (2026-09-21 A/B 실측 결과).
+#
+#   Takeaway + What to watch next + Sources
+#
+# What to watch next 는 실제 재료(research.open_questions)가 있을 때만 만듭니다.
+# 빈 공간을 채우기 위한 문장 생성은 금지입니다.
+#
+# variant B(Takeaway 2줄)는 deprecated: A 의 부분집합이며(재료가 없으면 A 도 2줄이
+# 됨) 재료가 있을 때 정보를 버리므로 제거했습니다.
+closing:
+  cta: "저장해 두고 필요할 때 다시 보세요"   # 마지막 장 하단 안내(빈 문자열이면 끔)
+  variant: "A"
+  variants:
+    A:
+      primary_label: "Takeaway"
+      secondary_label: "What to watch next"
+      primary_items: "1~2"
+      secondary_items: "1~2"
+      guidance: >
+        Takeaway 는 지금 알아야 할 결론, What to watch next 는 다음에 확인할 지점.
+        watch 재료가 없으면 두 번째 블록을 비워 두고 Takeaway 만 쓴다.
+
+# 각 post 가 답해야 하는 질문. slide title 로 그대로 쓸 필요는 없습니다.
+questions:
+  - "What happened?"
+  - "What changed?"
+  - "Why does it matter?"
+  - "Who should care?"
+  - "What should we watch next?"
+
+language:
+  primary: "ko"
+  # 기술 고유명사는 영어 유지
+  keep_english:
+    [Agent, RAG, MCP, LLM, SDK, API, Mainnet, Testnet, Devnet, Validator,
+     Rollup, Inference, GA, Preview, Release, Changelog, Token, Prompt]
+
+tone:
+  # 채널 기본 문체: 간결한 개조식 / 명사형. 카테고리(AI/Blockchain)와 무관하게 동일.
+  # 실측 문제: AI 게시물은 "~다" 평서체, Blockchain 게시물은 명사형으로 갈렸음.
+  style: "개조식 / 명사형"
+  principles:
+    - "간결 — 한 문장에 한 사실"
+    - "차분 — 감탄·과장 없음"
+    - "정보 중심 — 수치·버전·날짜 우선"
+    - "개발자 관점 — 무엇을 해야 하는지"
+    - "종결은 명사형 또는 짧은 개조식 (예: 'tool call을 백그라운드로 실행')"
+  # 슬라이드 본문에서 피하는 종결 (캡션은 문장형이 자연스러우므로 예외)
+  avoid_endings:
+    - "했습니다"
+    - "합니다"
+    - "입니다"
+    - "됩니다"
+    - "습니다"
+    - "할 수 있습니다"
+    - "라고 볼 수 있습니다"
+    - "있어요"
+    - "하세요"
+  # 명사형으로 쓰면 어색해지는 경우 짧은 평서형("~한다", "~된다")은 허용.
+  allow_plain_declarative: true
+  # 슬라이드 본문 중 이 비율 이상이 명사형/개조식이어야 합니다.
+  min_nominal_ratio: 0.7
+  # 이 표현이 나오면 editor 가 제거하고 validator 가 경고합니다.
+  banned_phrases:
+    - "혁신적"
+    - "혁명적"
+    - "놀라운"
+    - "충격적"
+    - "게임체인저"
+    - "게임 체인저"
+    - "반드시 알아야"
+    - "세상을 바꿀"
+    - "대박"
+    - "미쳤"
+    - "완벽한"
+    - "역사상"
+    - "필수 시청"
+
+# 슬라이드 간 semantic duplicate 검사 (bullet 단위)
+# 실측: deep_dive 7장에서 Context → Key detail → Why it matters → Takeaway 가
+# 같은 사실을 각도만 바꿔 반복했음.
+duplicate:
+  # content/closing 슬라이드끼리
+  warn_threshold: 0.62
+  block_threshold: 0.75
+  # cover 는 예고 역할이라 본문과 어느 정도 겹칠 수 있으므로 기준을 높입니다.
+  cover_warn_threshold: 0.72
+  cover_block_threshold: 0.85
+  # block 이 나오면 editor 에게 중복 목록을 주고 최대 이 횟수까지 재작성합니다.
+  repair_attempts: 1
+  # 이 장수 이상이면 writer 를 두 번 호출하고, 두 번째 호출에 used_facts 를 넘겨
+  # 앞 슬라이드에서 쓴 사실의 재사용을 막습니다(LLM 호출 1회 추가).
+  chunk_from_slides: 7
+
+# news_short 최소 정보량. 미달이면 생산 전에 토픽을 건너뜁니다(빈 문장 추가 금지).
+#
+# 실측 캘리브레이션 (재료 글자수 → 실제 슬라이드 본문 글자수):
+#   Solana 9/18   7 fact /  382자 → 125자  ← content slide 48자 문제 발생
+#   ollama rc1    6 fact /  536자 → 195자    3장으로 적절 (92/103자)
+#   agave rc.1    7 fact /  843자 → 587자    5장으로 적절
+#   MilleMiglia  11 fact / 2013자 → 690자    5장
+#   Solana 9/3   23 fact / 2456자 → 1052자   7장
+# 재료 대비 실사용 비율이 0.2~0.7 로 넓어 fact 개수를 1차 기준, 글자수를 하한으로 씁니다.
+material_gate:
+  # 사용 가능한 검증된 fact(= key_facts + technical_details + what_changed/why,
+  # 미검증 항목 제외) 최소 개수
+  min_usable_facts: 4
+  # 위 재료의 총 글자 수 하한 (382자 케이스가 실패했으므로 450자)
+  min_material_chars: 450
+  # news_standard(5장)를 쓰려면 이 이상
+  standard_min_facts: 6
+  standard_min_chars: 700
+  # deep_dive(7장)를 쓰려면 이 이상
+  deep_dive_min_facts: 10
+  deep_dive_min_chars: 1500
+  # 재료가 부족하면: skip(다음 토픽) | shrink(더 짧은 템플릿) 중 무엇을 할지
+  on_insufficient: "skip"
+
+# content_quality_score 가중치 (합 1.0). publishable 판정에 함께 쓰입니다.
+quality_score:
+  weights:
+    factual_confidence: 0.25
+    source_diversity: 0.15
+    semantic_uniqueness: 0.20
+    information_density: 0.15
+    tone_consistency: 0.10
+    render_quality: 0.15
+  # 이 점수 미만이면 publishable=false (기술적으로 생성 가능해도 게시 부적합)
+  publish_threshold: 0.70
+
+# 슬라이드 간 밀도 편차 경고 기준 (최대/최소 본문 글자 수 비율)
+density_variance_warn: 3.0
+
+# 카테고리 비중 (선정 단계에서 참고. 주 2회 기준 장기 평균)
+category_mix:
+
+  ai: 0.6
+  blockchain: 0.4
+
+# 슬라이드 문장별 근거 추적 (src/grounding.py). LLM 심사관이 각 문장을 research 근거와
+# 대조합니다. 끄면 원문에 없는 주장이 게이트를 통과할 수 있으므로 기본은 켭니다.
+grounding:
+  enabled: true
+
+# 시점 지난 소식 감지 (src/freshness.py). 지난 날짜를 앞으로 올 일처럼 쓴 문장을 BLOCK 합니다.
+# LLM 없이 날짜 표현과 미래·마감 표현만 봅니다.
+freshness:
+  enabled: true
+
+fact_check:
+  # 이 verdict 만 캐러셀로 만듭니다.
+  allowed_verdicts: [verified, partially_verified]
+  # partially_verified 항목은 review 에 경고로 남깁니다.
+  warn_verdicts: [partially_verified]
+  # 최소 출처 수. 1개면 경고(단일 출처).
+  min_sources: 1
+  warn_if_sources_below: 2
+
+# 용어 풀이(렌더 전용). 슬라이드 글에 용어가 실제로 나올 때만 하단에 한 줄씩(장당 max_per_slide) 붙는다.
+# 뉴스 사실이 아니라 일반 정의만 적는다. 정의는 사람이 검수한다(carousel.json·승인 해시에는 들어가지 않음).
+glossary:
+  enabled: true
+  label: "용어 풀이"
+  max_per_slide: 2
+  terms:
+    permissionless: "누구나 허락 없이 참여할 수 있는 방식"
+    permissioned: "허가받은 참여자만 쓸 수 있는 방식"
+    allowlist: "허용된 주소만 적어 둔 명단"
+    venue: "거래가 이뤄지는 장소·시스템"
+    AMM: "공식으로 가격을 정해 거래시키는 방식"
+    liquidity provider: "풀에 거래 자금을 넣는 참여자"
+    transfer hook: "토큰이 옮겨질 때마다 조건을 자동 검사하는 규칙"
+    transfer agent: "주주 명부를 관리하는 기관"
+    sequencer: "거래의 처리 순서를 정하는 주체"
+    validator: "거래를 검증해 기록하는 참여자"
+    halt: "거래를 일시 중단하는 조치"
+    relief: "규제 의무를 면제해 주는 조치"
+    synthetic: "실물 없이 가격만 따라가는 상품"
+    dealer: "증권 거래를 업으로 하는 중개업자"
+    onchain: "블록체인 위에 직접 기록되는 방식"
+
+# 제목은 직관적으로, 본문은 전문적이어도 된다. 어기면 validator 가 경고한다(차단은 아님).
+# 전문용어는 본문에 두고, 렌더가 glossary 로 풀이 한 줄을 붙인다.
+title_style:
+  enabled: true
+  max_latin_words: 1      # 제목에 영어 단어 최대 1개(allow_latin 은 세지 않음)
+  max_chars: 30           # 권장 길이(하드 상한은 text_budget.content.title_max_chars)
+  allow_latin: [SEC, AI, ETF, CFTC, FOMC, GPU, API, NFT, DeFi, IPO, ETH, BTC, EU, US, FTC, DOJ]
+
+# 자동 승인 게이트(channel/src/auto_gate.py). 사람 검수 없이 운영하기 위한 측정 가능한 기준.
+# 하나라도 실패하면 승인하지 않고 보류(pending + auto_gate.json 에 사유). 게이트를 낮춰서 통과시키지 않는다.
+# 통과해도 게시는 하지 않는다 — instagram.yaml 의 phase/publish 가 따로 꺼져 있다.
+auto_gate:
+  enabled: true
+  required_verdict: "verified"   # partially_verified 는 보류
+  max_partial_claims: 0          # 근거 추적에서 partial 판정 허용 개수
+  min_quality: 0.75              # 발행 가능 최소 품질 점수(validator 기준 0.70 보다 높게)
+
+# 자동 수정(channel/src/repair.py): 근거 추적이 partial/unsupported 로 판정한 문장과 영어 전문용어 제목을
+# LLM 이 근거가 지지하는 범위로 좁히거나 쉬운 말로 바꾼다. 새 사실·숫자는 코드가 거절한다.
+# 수정 후 근거를 다시 심사하며, 그래도 안 되면 그대로 두어 자동 승인 게이트가 보류한다.
+repair:
+  enabled: true
+  max_rounds: 2    # 거절된 수정은 이유를 알려 한 번 더 시도
+  review_enabled: true   # 독립 심사관이 high 로 지적한 슬라이드 문제도 고친다(캡션 작성 전)
+  review_rounds: 1
+  review_max_issues: 5   # 한 번에 고치는 심사 이슈 수(이슈마다 LLM 1회)
+
+# 캡션도 쉬운 말로(카드 제목 규칙과 같은 취지). 내용의 전문성은 유지하고 코드 식별자·영어 전문용어를 풀어 쓴다.
+# 어기면 작성 단계가 한 번 다시 쓰게 하고(retry), 그래도 남으면 validator 가 경고한다(차단 아님).
+caption_style:
+  enabled: true
+  max_latin_ratio: 0.30   # 글자 중 영어 비율 상한(제품명·약어 제외)
+  retry: 1                # 규칙을 어겼을 때 다시 쓰게 하는 횟수
+  allow_latin: [AI, SEC, ETF, CFTC, GPU, CPU, API, NFT, DeFi, IPO, ETH, BTC, EU, US, OCR, TTS, LLM, MoE]
