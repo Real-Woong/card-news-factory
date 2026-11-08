@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import os
 import stat
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 
 import pytest
@@ -26,7 +26,7 @@ from channel.src.token_store import (
 
 BASE = "BASE-token-0123456789-abcdefghijklmnop"
 FRESH = "FRESH-token-9876543210-qrstuvwxyz"
-NOW = datetime(2026, 11, 2, 9, 0, tzinfo=timezone.utc)
+NOW = datetime(2026, 11, 2, 9, 0, tzinfo=UTC)
 
 
 @pytest.fixture
@@ -101,7 +101,7 @@ class TestRefresh:
         store = tmp_path / "token.json"
         refresh_token(channel, environ=env(), path=store, http=Http(), now=NOW)
         data = read_store(store)
-        data["expires_at"] = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+        data["expires_at"] = (datetime.now(UTC) - timedelta(days=1)).isoformat()
         store.write_text(json.dumps(data), encoding="utf-8")
         assert effective_environ(env(), store)[TOKEN_ENV] == BASE
 

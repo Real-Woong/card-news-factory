@@ -3,8 +3,8 @@
 from src.publishers.base import (
     PUBLISHERS,
     FilePublisher,
-    PublishError,
     Publisher,
+    PublishError,
     PublishResult,
 )
 

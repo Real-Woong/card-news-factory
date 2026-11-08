@@ -136,11 +136,10 @@ def strip_ansi(text: str) -> str:
 
 def parse_footer(text: str) -> tuple[float, float]:
     """``▸ Credits: 0.08 • Time: 2s`` 에서 (credits, seconds) 추출. 없으면 (0, 0)."""
-    match = None
-    for match in FOOTER_PATTERN.finditer(text):  # 마지막 푸터를 사용
-        pass
-    if match is None:
+    matches = list(FOOTER_PATTERN.finditer(text))
+    if not matches:
         return 0.0, 0.0
+    match = matches[-1]  # 마지막 푸터를 사용
     credits = float(match.group("credits"))
     value = float(match.group("time"))
     unit = match.group("unit").lower()

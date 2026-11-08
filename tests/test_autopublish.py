@@ -14,9 +14,9 @@ from types import SimpleNamespace
 import pytest
 
 from channel.src.autopublish import (
-    PAUSE_FILE,
     FAILED,
     HELD,
+    PAUSE_FILE,
     PUBLISHED,
     SKIPPED,
     auto_publish,

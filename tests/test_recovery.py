@@ -6,13 +6,13 @@ import pytest
 
 from channel.src.config import load_channel_config
 from channel.src.editor import InstagramEditor
-from channel.src.planner import build_template_plan
 from channel.src.material import assess_material
 from channel.src.pipeline import _recheck_duplicates_after_refill
+from channel.src.planner import build_template_plan
 from channel.src.recovery import (
-    DensityRecoveryState,
     REASON_INSUFFICIENT_UNIQUE_MATERIAL,
     REASON_THIN_AFTER_REPAIR,
+    DensityRecoveryState,
     cover_body_duplicates,
     safe_downgrade_target,
     thin_content_slides,

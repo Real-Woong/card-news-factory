@@ -85,7 +85,7 @@ class VectorStore(ABC):
     def count(self, collection: str) -> int:
         """Number of records in a collection."""
 
-    def persist(self) -> None:
+    def persist(self) -> None:  # noqa: B027 - optional hook, deliberately a no-op by default
         """Flush to disk. No-op for stores that write eagerly."""
 
     def collections(self) -> list[str]:

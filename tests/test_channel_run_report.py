@@ -9,21 +9,20 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.core.errors import AgentError
-
 from channel.src.config import load_channel_config
 from channel.src.material import MaterialAssessment
 from channel.src.pipeline import run_candidates
 from channel.src.run_report import (
     REASON_MATERIAL_TOO_THIN,
     REASON_QUALITY_GATE_FAILED,
-    RESULT_GENERATED,
     RESULT_FAILED,
+    RESULT_GENERATED,
     ChannelRunReport,
     resolve_run_report,
     write_run_report,
 )
 from channel.src.schema import VerifiedTopic
+from src.core.errors import AgentError
 
 
 def make_topic(topic_id: str) -> VerifiedTopic:

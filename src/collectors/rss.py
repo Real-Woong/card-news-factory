@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from src.collectors.base import Collector
 from src.collectors.extract import html_to_text
-from src.core.evidence import build_source_metadata
 from src.collectors.feeds import parse_feed
 from src.core.errors import CollectorError
+from src.core.evidence import build_source_metadata
 from src.core.models import RawItem
 from src.core.text import clean_text
 

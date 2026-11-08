@@ -10,9 +10,6 @@ import json
 
 import pytest
 
-from src.agents.llm import LLMClient, LLMRequest, LLMResponse
-from src.core.errors import ContentOpsError
-
 from channel.src.config import load_channel_config
 from channel.src.hook import (
     HookOption,
@@ -25,6 +22,8 @@ from channel.src.hook import (
 )
 from channel.src.renderer import CarouselRenderer
 from channel.src.schema import Carousel, Slide, SlideType
+from src.agents.llm import LLMClient, LLMRequest, LLMResponse
+from src.core.errors import ContentOpsError
 
 
 @pytest.fixture
@@ -266,7 +265,7 @@ class TestCoverDesign:
             assert (channel.root / rel).is_file(), (key, rel)
 
     def test_missing_logo_falls_back_to_drawing(self, channel):
-        channel.content  # 설정 객체는 그대로 두고 경로만 바꾼다
+        _ = channel.content  # 설정 객체는 그대로 두고 경로만 바꾼다
         channel.brand["cover_logos"] = {"default": "없는파일.png"}
         main = self.html(channel).split("<main")[1].split("</main>")[0]
         assert "<svg" in main and main.count("<path") == 3

@@ -55,4 +55,6 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-ignore = ["B008"]
+# E501: comments and strings are Korean, and ruff counts East Asian characters as double
+# width, so line length is left to `ruff format` rather than enforced as a lint rule.
+ignore = ["B008", "E501"]

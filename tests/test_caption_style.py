@@ -6,12 +6,11 @@ import json
 
 import pytest
 
-from src.agents.llm import LLMClient, LLMRequest, LLMResponse
-
 from channel.src.caption_style import caption_problems, known_names
 from channel.src.config import load_channel_config
 from channel.src.schema import Carousel, Slide, SlideType, Source, VerifiedTopic
 from channel.src.writer import InstagramCaptionWriter
+from src.agents.llm import LLMClient, LLMRequest, LLMResponse
 
 # 2026-10-28-3 에 실제로 게시된 캡션(개발자용 표현이 그대로 있던 사례)
 POSTED = (

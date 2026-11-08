@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.collectors.arxiv import ArxivCollector
-from src.collectors.base import CollectSettings, Collector
+from src.collectors.base import Collector, CollectSettings
 from src.collectors.github import GithubReleasesCollector
 from src.collectors.http import HttpClient, HttpSettings
 from src.collectors.rss import RssCollector

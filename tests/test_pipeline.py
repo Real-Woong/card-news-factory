@@ -7,7 +7,7 @@ import json
 import pytest
 
 from src.core.config import load_config
-from src.pipeline.run import build_parser, build_context, finalize, run_pipeline
+from src.pipeline.run import build_context, build_parser, finalize, run_pipeline
 
 EXPECTED_FILES = {
     "research.json",
@@ -114,7 +114,7 @@ class TestOfflineRun:
             assert draft.char_count <= limits[draft.channel_id]
 
     def test_database_rows_written(self, isolated_config):
-        ctx = _run(isolated_config, ["--offline"])
+        _run(isolated_config, ["--offline"])
         from src.storage.db import open_db
         from src.storage.repository import ArticleRepository
 

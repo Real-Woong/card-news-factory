@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+import channel.src.publisher as publisher_module
 from channel.src.approval import content_hash, decide, init_record
 from channel.src.config import load_channel_config
 from channel.src.publisher import (
@@ -16,7 +17,6 @@ from channel.src.publisher import (
     preflight,
     publish_output,
 )
-import channel.src.publisher as publisher_module
 
 
 class FakeResponse:

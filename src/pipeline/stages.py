@@ -21,8 +21,8 @@ from src.core.models import Article, Draft, RawItem
 from src.dedup.service import DedupService, resolve_embedding_profile
 from src.pipeline import outputs, review
 from src.pipeline.context import PipelineContext
-from src.ranking.scorer import ArticleScorer
 from src.ranking.cluster import ClusterService
+from src.ranking.scorer import ArticleScorer
 from src.ranking.selector import TopicSelector
 from src.ranking.topics import TopicTagger
 

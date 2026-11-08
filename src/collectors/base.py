@@ -18,13 +18,13 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, ClassVar
 
+from src.collectors.http import HttpClient
 from src.core.config import SourceConfig
 from src.core.errors import CollectorError
+from src.core.evidence import build_source_metadata, evidence_backfill_reasons
 from src.core.logging_setup import get_logger
 from src.core.models import RawItem
-from src.core.evidence import build_source_metadata, evidence_backfill_reasons
 from src.core.text import age_days, clean_text, utcnow
-from src.collectors.http import HttpClient
 
 logger = get_logger(__name__)
 

@@ -10,8 +10,6 @@ import json
 
 import pytest
 
-from src.agents.llm import LLMClient, LLMRequest, LLMResponse
-
 from channel.src.approval import (
     STATUS_APPROVED,
     STATUS_PENDING,
@@ -30,6 +28,7 @@ from channel.src.auto_gate import (
 )
 from channel.src.config import load_channel_config
 from channel.src.schema import Carousel, Slide, SlideType, Source, VerifiedTopic
+from src.agents.llm import LLMClient, LLMRequest, LLMResponse
 
 GOOD_SOURCES = [
     {"name": "SEC", "url": "https://www.sec.gov/rules/order-tokenized", "verdict": "verified",

@@ -29,7 +29,7 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
-from src.collectors.base import CollectSettings, Collector, CollectorResult
+from src.collectors.base import Collector, CollectorResult, CollectSettings
 from src.core.config import SourceConfig
 from src.core.errors import CollectorError
 from src.core.evidence import build_source_metadata

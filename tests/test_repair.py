@@ -10,8 +10,6 @@ import json
 
 import pytest
 
-from src.agents.llm import LLMClient, LLMRequest, LLMResponse
-
 from channel.src.config import load_channel_config
 from channel.src.grounding import InstagramGroundingChecker
 from channel.src.repair import (
@@ -25,6 +23,7 @@ from channel.src.repair import (
     review_repair,
 )
 from channel.src.schema import Carousel, Slide, SlideType, VerifiedTopic
+from src.agents.llm import LLMClient, LLMRequest, LLMResponse
 
 EVIDENCE = [
     {"id": "E1", "kind": "key_fact", "text": "Pocket TTS runs on CPU with 100M parameters"},
@@ -303,15 +302,6 @@ class TestLocateQuote:
 
         assert _issue_slide({"where": "cover"}) == 1 and _issue_slide({"where": "slide 4"}) == 4
         assert _issue_slide({"where": "caption"}) == 0 and _issue_slide({"where": "sources"}) == 0
-
-
-class FakeReviewer:
-    def __init__(self, ok, issues):
-        self.ok, self.issues, self.calls = ok, issues, 0
-
-    def run(self, topic, carousel):
-        self.calls += 1
-        return self.ok, self.issues
 
 
 class TestReviewRepair:

@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
-
 import pytest
 
-from src.core.text import utcnow
 from src.ranking.cluster import (
     AUTHORITY_ORDER,
     ClusterService,

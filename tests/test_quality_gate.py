@@ -10,7 +10,7 @@ import pytest
 from channel.src.config import load_channel_config
 from channel.src.material import assess_material, enforce_template
 from channel.src.quality import analyze_tone, compute_quality_score
-from channel.src.schema import Carousel, Source, VerifiedTopic
+from channel.src.schema import Carousel, Source
 from channel.src.similarity import (
     anchor_tokens,
     bullet_similarity,

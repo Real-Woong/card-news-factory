@@ -6,14 +6,6 @@ import sqlite3
 
 import pytest
 
-from src.agents.fact_check import FactCheckAgent
-from src.agents.llm import MockLLM
-from src.core.evidence import build_source_metadata, retrieve_claim_evidence
-from src.core.errors import AgentError
-from src.core.models import Claim, ResearchNote, Verdict
-from tests.conftest import make_article
-from src.storage.db import SCHEMA_FILE, init_schema
-
 from channel.src.config import load_channel_config
 from channel.src.editor import InstagramEditor
 from channel.src.quality import _source_diversity
@@ -21,6 +13,13 @@ from channel.src.renderer import RenderResult, SlideRender
 from channel.src.schema import Source
 from channel.src.similarity import DuplicatePair
 from channel.src.validator import CarouselValidator
+from src.agents.fact_check import FactCheckAgent
+from src.agents.llm import MockLLM
+from src.core.errors import AgentError
+from src.core.evidence import build_source_metadata, retrieve_claim_evidence
+from src.core.models import Claim, ResearchNote, Verdict
+from src.storage.db import SCHEMA_FILE, init_schema
+from tests.conftest import make_article
 from tests.test_ra_glance import make_carousel, make_topic
 
 

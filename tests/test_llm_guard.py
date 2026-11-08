@@ -14,10 +14,9 @@ from types import SimpleNamespace
 
 import pytest
 
+from channel.src.llm_guard import llm_ready
 from src.agents import kiro_cli
 from src.agents.kiro_cli import CANARY_PROMPT, canary, kiro_version
-
-from channel.src.llm_guard import llm_ready
 
 
 @pytest.fixture(autouse=True)
@@ -152,7 +151,7 @@ class TestNeutralWorkingDirectory:
     """프로젝트 폴더의 .kiro 설정이 매 호출의 맥락으로 섞이지 않도록 빈 폴더에서 실행한다."""
 
     def test_calls_run_from_the_neutral_folder_not_the_project(self, tmp_path, monkeypatch):
-        from src.agents import kiro_cli, llm
+        from src.agents import kiro_cli
         from src.agents.llm import KiroCliLLM, LLMRequest
 
         monkeypatch.setattr(kiro_cli, "NEUTRAL_CWD", tmp_path / "kiro_cwd")
@@ -175,7 +174,7 @@ class TestNeutralWorkingDirectory:
             cat > /dev/null
             pwd > %s/where.txt
             echo '{"ok": true, "n": 42}'
-        ''' % tmp_path)
+        ''' % tmp_path)  # noqa: UP031 - the script body contains literal braces
         assert canary(argv).ok
         assert (tmp_path / "where.txt").read_text(encoding="utf-8").strip().endswith("kiro_cwd")
 
